@@ -2,15 +2,31 @@
 
 官网：http://skywalking.apache.org/
 
+参考资料：
+
+镜像资料：
+
+https://hub.docker.com/r/apache/skywalking-oap-server
+
+下载链接：
+
+https://skywalking.apache.org/downloads/
+
+Demo:
+
+https://www.apache.org/dyn/closer.cgi/skywalking/8.0.0/apache-skywalking-apm-8.0.0.tar.gz
+
 ## 什么是链路追踪
 
 ## 什么是skywalking
 
-目前主要的一些 APM 工具有: Cat、Zipkin、Pinpoint、SkyWalking；Apache SkyWalking 是观察性分析平台和应用性能管理系统。提供分布式追踪、服务网格遥测分析、度量聚合和可视化一体化解决方案。
+​	SkyWalking 是观察性分析平台和应用性能管理系统，提供分布式追踪、服务网格遥测分析、度量聚合和可视化一体化解决方案。
 
-![Skywalking-01](imageskywalking-01.png)
+​	目前主要的一些 APM 工具有: Cat、Zipkin、Pinpoint、SkyWalking；Apache SkyWalking 是观察性分析平台和应用性能管理系统。提供分布式追踪、服务网格遥测分析、度量聚合和可视化一体化解决方案。
 
+![Skywalking-01](./images/skywalking-old.png)
 
+![Skywalking-01](./images/skywalking-new.png)
 
 - **Skywalking Agent：** 使用 JavaAgent 做字节码植入，无侵入式的收集，并通过 HTTP 或者 gRPC 方式发送数据到 SkyWalking Collector。
 
@@ -25,13 +41,24 @@
 ## SkyWalking 功能特性
 
 - 多种监控手段，语言探针和服务网格(Service Mesh)
-- 多语言自动探针，Java，.NET Core 和 Node.JS
+- 支持Java, .Net Core, PHP, NodeJS, Golang, LUA语言探针，支持Envoy + Istio构建的Service Mesh
 - 轻量高效，不需要大数据
 - 模块化，UI、存储、集群管理多种机制可选
 - 支持告警
 - 优秀的可视化方案
 
+## 检测指标
 
+- 服务可用性指标 SLA
+- 每分钟平均响应数
+- 平均响应时间
+- 服务进程 PID
+- 服务所在物理机的 IP、Host、OS
+- 运行时 CPU 使用率
+- 运行时堆内存使用率
+- 运行时非堆内存使用率
+- GC 情况
+- ...
 
 # 服务端
 
@@ -40,7 +67,7 @@
 ```shell
 # 获取服务包
 http://skywalking.apache.org/zh/downloads/
-https://www.apache.org/dyn/closer.cgi/skywalking/6.6.0/apache-skywalking-apm-6.6.0.tar.gz
+https://www.apache.org/dyn/closer.cgi/skywalking/8.0.0/apache-skywalking-apm-8.0.0.tar.gz
 ```
 
 ### 使用Elasticsearch
@@ -51,6 +78,7 @@ https://www.apache.org/dyn/closer.cgi/skywalking/6.6.0/apache-skywalking-apm-6.6
 version: '3.3'
 services:
   elasticsearch:
+    # 此处选择自己的镜像（建议找官方的）
     image: wutang/elasticsearch-shanghai-zone:6.3.2
     container_name: elasticsearch
     restart: always
@@ -62,7 +90,7 @@ services:
 ```
 
 ```shell
-# 测试
+# 测试 elasticsearch
 http://elasticsearchIP:9200/ 
 ```
 
@@ -89,6 +117,9 @@ http://localhost:8080
 
 ```shell
 # 直接启动即可
+# 注释 H2 存储方案
+# 启用 ElasticSearch 存储方案
+# 修改 ElasticSearch 服务器地址
 ```
 
 
@@ -128,18 +159,17 @@ java -javaagent:/path/to/skywalking-agent/skywalking-agent.jar -Dskywalking.agen
 
 ### Assembly
 
-​	Assembly 插件目的是提供一个把工程依赖元素、模块、网站文档等其他文件存放到单个归档文件里
+```shell
+# Assembly 插件目的是提供一个把工程依赖元素、模块、网站文档等其他文件存放到单个归档文件里
 
- 支持文件 
-    zip、tar.gz、tar.bz2、jar、dir、war
-
-
-
-项目构建为maven项目
+# 支持文件 
+  # zip、tar.gz、tar.bz2、jar、dir、war
+# 项目构建为maven项目
+```
 
 #### maven插件
 
-```shell
+```xml
 <build>
     <plugins>
         <plugin>
@@ -172,6 +202,7 @@ java -javaagent:/path/to/skywalking-agent/skywalking-agent.jar -Dskywalking.agen
 #### assembly.xml
 
 ```shell
+# Assembly 插件目的是提供一个把工程依赖元素、模块、网站文档等其他文件存放到单个归档文件里。
 # 新建文件
 src/main/resources/assembly.xml
 ```
@@ -210,12 +241,41 @@ src/main/resources/assembly.xml
 #### mvn构建
 
 ```shell
-mvn clean package
-mvn clean install
+$ mvn clean package
+$ mvn clean install
 
 # package：会在 target 目录下创建名为 `skywalking-6.0.0-Beta.tar.gz` 的压缩包
 # install：会在本地仓库目录下创建名为 `hello-spring-cloud-external-skywalking-1.0.0-SNAPSHOT-6.0.0-Beta.tar.gz` 的压缩包
 ```
 
+# 配置结构说明
 
+```shell
+tar -zxvf apache-skywalking-apm-7.0.0.tar.gz -C / # 自己指定目录
+
+
+cd apache-skywalking-apm-bin/agent/
+   skywalking-agent.jar # 探针jar
+   
+config
+   agent.conf # 探针配置
+   
+plugins/
+optional-plugins/
+	# 插件信息
+
+cd apache-skywalking-apm-bin/
+
+bin
+	startup.sh  #	启动脚本
+
+config
+	application.yml # 主配置文件
+	
+cd apache-skywalking-apm-bin/
+
+webapp
+	skywalking-webapp.jar # UI界面
+	webapp.yml # UI配置
+```
 
