@@ -35,7 +35,7 @@ $(function(){
         //code popup
         codePop:function(){
             // code popup
-            
+
             var lang_listCode = '<div id="lang_list" code="code">\
                                     <a href="#html" style="width:95px;" class="long_name" target="_self">HTML/XML</a>\
                                     <a href="#objc" style="width:95px;" class="long_name" target="_self">objective-c</a>\
@@ -53,7 +53,7 @@ $(function(){
                                     <a style="border:none; " href="#plain" class="duan_name" target="_self">其它</a>\
                                     <span class="arrb"></span>\
                                 </div>';
-          
+
             setTimeout(function(){
               if(!($('#lang_list')[0])){
                 $('.bot_bar').append(lang_listCode)
@@ -215,7 +215,7 @@ $(function(){
                          rightH = $(".fixRight").height() + 276,
                          leftPos = $('aside').offset().left,
                          wrapH = fixWrap.height();
-                         
+
                         //  $('.bottomRcom').css({'margin-top':'150px'});
                      $(window).scroll(function(){
                          var scrollTop = $(document).scrollTop(), // 谷歌识别 body  火狐只识别html document 都识别
@@ -230,8 +230,8 @@ $(function(){
                               $('.bottomRcom').animate({opacity:0},300);
                               $('.bottomRcom').css({'pointer-events':'all','z-index':'-5',});
                            }
-                            //  $('.bottomRcom').animate({opacity:0},1000); 
-                            //  $('.bottomRcom').css({'width':'300px','opacity':'1','height':'256px','position':'relative','z-index':'999','top':'0','left':'auto','pointer-events':'none'});  
+                            //  $('.bottomRcom').animate({opacity:0},1000);
+                            //  $('.bottomRcom').css({'width':'300px','opacity':'1','height':'256px','position':'relative','z-index':'999','top':'0','left':'auto','pointer-events':'none'});
                          }
                      });
         },
@@ -340,7 +340,7 @@ $('#commentform input[type="submit"]').on('click',function(){
 });
 //relate artical list
 $(function(){
-    var loadanAnimation = "<div class='Recommend_loadanAnimation'><img src='http://static.blog.csdn.net/Skin/skin3-template/images/feedLoading.gif'></div>" 
+    var loadanAnimation = "<div class='Recommend_loadanAnimation'><img src='http://static.blog.csdn.net/Skin/skin3-template/images/feedLoading.gif'></div>"
     //根据页数读取数据
     var allpage = 1;
     var noMoreData = false;
@@ -354,9 +354,9 @@ $(function(){
             return;
         }
         // $.get("http://blog.csdn.net/csdn/svc/GetRelatedArticles?pageindex="+allpage+"&articleId="+fileName, function (data) {
-        // 
+        //
         // });
-        
+
         if(!$('.Recommend_loadanAnimation')[0]){
           $('.recommend_list').append(loadanAnimation);
           overflow_hide($('.downloadElement .summary h2 a'),28 ,'overflow-hide-title-height')
@@ -364,7 +364,7 @@ $(function(){
         $.ajax({
           url: "http://blog.csdn.net/csdn/svc/GetRelatedArticles?pageindex="+allpage+"&articleId="+fileName,
           beforeSend:function(){
-      
+
           },
           success:function(data){
             $('.Recommend_loadanAnimation').remove();
@@ -376,12 +376,12 @@ $(function(){
                 return
             }
           }
-        })      
+        })
     }
     //初始化加载第一页数据
     getRelateListData();
 
-    var winH = $(window).height(); //页面可视区域高度 
+    var winH = $(window).height(); //页面可视区域高度
 
     var scrollHandler = function () {
         if(!noMoreData){
@@ -524,7 +524,7 @@ function init_comment() {
     editor = $(editorId);
 
     var editor_inter = null;
-    if (editor.length > 0) {    
+    if (editor.length > 0) {
         //$("#lang_list").append('<a class="long_name" href="#html">HTML/XML</a><a class="long_name" href="#objc">objective-c</a><a class="zhong_name" href="#delphi">Delphi</a><a  class="zhong_name" href="#ruby">Ruby</a><a href="#php">PHP</a><a class="duan_name" href="#csharp">C#</a><a style=" border-right: none;"  class="duan_name" href="#cpp">C++</a><a style=" border-bottom:none;"class="long_name" href="#javascript">JavaScript</a><a style=" border-bottom:none;" class="long_name" href="#vb">Visual Basic</a><a style=" border-bottom:none;" class="zhong_name" href="#python">Python</a><a style=" border-bottom:none;" class="zhong_name" href="#java">Java</a><a style="border-bottom:none;" class="duan_name" href="#css">CSS</a><a style="border-bottom:none;" class="duan_name" href="#sql">SQL</a><a style="border:none;"  class="duan_name" href="#plain">其它</a>');
         editor.focus(function () {
             editor_inter = setInterval(function () {
@@ -612,13 +612,13 @@ function loadList(pageIndex, isSub) {
             //scrollInit();
         });
     }
-    
+
 }
 function loadComment(topics,page){
   var url = location.href.toString().split('/');
   var cmtUrl = "http://"+url[2]+"/"+url[3]+"/comment/list/" + fileName + "?page=" + page +"&size=3";
   var list=[]
-  
+
   $.ajax({
     async: false,//设置为同步
     url:cmtUrl,
@@ -633,7 +633,7 @@ function loadComment(topics,page){
     }
   })
   if (list.length > 0) {
-    if(topics.length < 3){ 
+    if(topics.length < 3){
       loadComment(topics,page+1);
     }
   }
@@ -664,15 +664,15 @@ function getReplies(item, list) {
     return replies;
 }
 //获取评论的HTML
-function getItemHtml(comment, index, floor, deep) {    
+function getItemHtml(comment, index, floor, deep) {
     var html = ' <div class="comment_li_box clearfix">';
     html += '         <dl class="comment_list clearfix" id="comment_item_' + comment.CommentId + '">';
     html += '           <dt>';
-    html += '               <a href="/' + comment.UserName + '"><img src="' + comment.Userface + '" alt="' + comment.UserName + '"></a></dt>';
+    html += '               <a href=' + comment.UserName + '"/"><img src="' + comment.Userface + '" alt="' + comment.UserName + '"></a></dt>';
     html += '           <dd>';
     html += '             <ul class="com_r clearfix">';
     html += '               <li class="top clearfix">';
-    html += '                 <h4><a href="/' + comment.UserName + '">' + comment.UserName + '</a></h4>';
+    html += '                 <h4><a href=' + comment.UserName + '"/">' + comment.UserName + '</a></h4>';
     html += '                 <span class="time">' + comment.PostTime + '</span>';
     html += '                 <span class="floor_num" floor=' + (floor || index) + '>' + (comment.ParentId > 0 ? " " : index + '楼') + '</span>';
     html += '               </li>';
@@ -717,21 +717,21 @@ function getChildItemHtml(comment, index, floor, deep) {
     //html += '   <div class="autoHeight clearfix">';
     var html = '    <dl class="comment_list clearfix" id="comment_item_' + comment.CommentId + '">';
     html += '      <dt>';
-    html += '          <a href="/' + comment.UserName + '">';
+    html += '          <a href=' + comment.UserName + '"/">';
     html += '              <img src="' + comment.Userface + '" alt="' + comment.UserName + '">';
     html += '          </a>';
     html += '      </dt>';
     html += '      <dd>';
     html += '        <ul class="com_r clearfix">';
     html += '          <li class="top clearfix">';
-    html += '            <h4><a href="/' + comment.UserName + '">' + comment.UserName + '</a></h4>';
+    html += '            <h4><a href=' + comment.UserName + '"/">' + comment.UserName + '</a></h4>';
     html += '            <span class="time">' + comment.PostTime + '</span>';
     html += '            <span class="floor_num" floor=' + (floor || index) + '>' + '</span>';
     html += '          </li>';
     html += '          <li class="mid clearfix">';
     html += '            <div class="comment_p">' + replaceUBBToHTML(comment) + '</div>';
     html += '          </li>';
-    html += '          <li class="mid clearfix">';   
+    html += '          <li class="mid clearfix">';
     html += '               <label>';
 //    html += '                 <a href="#reply" class="com_reply" commentid="' + comment.CommentId + '" floor="' + floor + '">回复</a>';
 //    html += '                 <a href="#quote" class="com_reply" commentid="' + comment.CommentId + '" floor="' + floor + '">引用</a>';
@@ -778,13 +778,13 @@ function paging(start,end,dom){ // 生成按钮
       end = end ? end : initNum ,
       dom = dom || '.page_btn_event[page=1]';
   if(totalFloor < 5)return false;
-  
+
   var html = '<div class="pagebox"><div class="page_btn page_header" page="1"><i class="icon iconfont icon-shouye"></i></div><div class="page_btn page_back"><i class="icon iconfont icon-zuojiantou"></i></div>';
-  
+
   for (var i = start; i < end; i++) {
     html += '<div class="page_btn page_btn_event" page='+(i+1)+'>'+(i+1)+'</div>';
   }
-  
+
   html+='<div class="page_btn page_go"><i class="icon iconfont icon-youjiantou"></i></div><div class="page_btn page_footer" page="'+num+'"><i class="icon iconfont icon-weiye"></i></div></div>';
   $('#comment_bar').html(html);
   $(dom).addClass('page_activ');
@@ -838,7 +838,7 @@ function removeClass(dom,classs){ // 删除选址难得class
   })
 }
 function page_btn_event(){ // 分页按钮事件
-  
+
   // 页数
   $(document).on('click','.page_btn_event',function(e){
     removeClass('.page_btn_event','page_activ')
@@ -890,7 +890,7 @@ function page_btn_event(){ // 分页按钮事件
     }
   })
 }
-page_btn_event() 
+page_btn_event()
 function deleteCommentList(Id){
   for (var i = 0; i < tatolList.length; i++) {
     if (tatolList[i].CommentId === parseInt(Id)) {
@@ -929,18 +929,18 @@ function setBtnEvent() {
         var lists = tatolList != [] ? tatolList : list;
         switch (action) {
             case "#reply":
-                if (currentUserName) {                   
+                if (currentUserName) {
                     replyComment(commentId, lists);
                     setEditorFocus();
                 }
                 return true;
             case "#quote":
-                if (currentUserName) {                   
+                if (currentUserName) {
                     quoteComment(commentId, list);
                     setEditorFocus();
                 }
                 return true;
-            case "#report":             
+            case "#report":
                 reportComment(commentId, $(this));
                 break;
             case "#delete":
@@ -950,7 +950,7 @@ function setBtnEvent() {
                 return true;
         }
         return false;
-    });    
+    });
 }
 /*使评论框获得焦点*/
 function setEditorFocus() {
@@ -1044,7 +1044,7 @@ function load_comment_form() {
         $("#commentbox").show();
         $(".publish_btn").click(function () {
             $("#commentform").submit();
-        });       
+        });
     } else {
         var curl = encodeURIComponent(location.href);
         $("#commentsbmitarear").html('<div class="guest_link"><span class="log_ico"><i class="icon iconfont icon-yonghu"></i></span><span class="txt">目前您尚未登录，请 ' +
@@ -1054,7 +1054,7 @@ function load_comment_form() {
         '<a href="https://passport.csdn.net/account/login?from=' + curl + '">登录</a> 或 ' +
         '<a href="http://passport.csdn.net/account/register?from=' + curl + '">注册</a> 后进行评论</span></div>');
     }
-    ubb_event(); 
+    ubb_event();
 }
 
 function getcookie(name) {
@@ -1112,7 +1112,7 @@ function subform(e) {
                 {
                     $("html,body").animate({ scrollTop: $("#comment_item_" + rcommentid).offset().top }, 1000);
                 }
-                
+
             }
         }
     });
@@ -1140,7 +1140,7 @@ function ubb_event() {
         switch (code) {
             case "code":
                 var lang_list = $("#lang_list");
-                editor.val("[code=" + $.trim(targetDOM.href.split('#')[1]) + "]\n" + selectedValue + "\n[/code]");                        
+                editor.val("[code=" + $.trim(targetDOM.href.split('#')[1]) + "]\n" + selectedValue + "\n[/code]");
                 break;
             default:
                 editor.val("[" + code + "]" + selectedValue + "[/" + code + "]");
@@ -1149,9 +1149,9 @@ function ubb_event() {
         return false;
     });
 
-   
+
     /*editor = $(editorId);
-    $("#lang_list").children().each(function () {       
+    $("#lang_list").children().each(function () {
         var selectedValue = editor.selection();
         //editor.focus();
 
@@ -1211,7 +1211,7 @@ function csdnBlogDirectory(hs) {
           switch(h){
             case 1:
               ++h1Num,h2Num =0,h3Num=0;
-              
+
               s += '<li><a href="#t' + i + '">'+ h1Num + '. '+ tit + '</a></li>';
               hs.eq(i).html('<a name="t' + i + '"></a>' + hs.eq(i).html());
               break;
@@ -2008,7 +2008,7 @@ function report(id, t, e) {
         var u = blog_address.split('/')[3];
         url = "http://dev.blog.csdn.net:5391/"+u+"/common/report?id=" + id + "&t=" + t;
     }
-    
+
     if (t == 3) {
         var floor = e.attr('floor');
         url += "&floor=" + floor;
@@ -2079,7 +2079,7 @@ function openWindow(url, title) {
 
 function GetCategoryArticles(id, username, type, aid) {
     var topid = "top_" + id;
-    
+
     if (type == "top") {
         var objtop = $("#" + topid + " li");
         if (objtop.length > 0) {
@@ -2087,7 +2087,7 @@ function GetCategoryArticles(id, username, type, aid) {
         }
     }
 
-   
+
 
     var url = "/" + username + "/svc/GetCategoryArticleList?id=" + id + "&type=" + type;
     //url="http://dev.blog.csdn.net:5391"+url;
@@ -2116,7 +2116,7 @@ function GetCategoryArticles(id, username, type, aid) {
         }
         else if (type == "foot") {
 
-            $(".my_article_t_cur").removeClass("my_article_t_cur");   
+            $(".my_article_t_cur").removeClass("my_article_t_cur");
             $("#samecate"+id).addClass("my_article_t_cur");
 
             var objfootleft = $(".my_list.fl");
@@ -2154,8 +2154,8 @@ function GetCategoryArticles(id, username, type, aid) {
             });
 
             var count = $(".my_article_t_l.my_article_t_cur em").text().replace("（", "").replace("）", "");
-            if (parseInt(count) > 10) {                
-                var moreurl=$(".my_article_t_l.my_article_t_cur").attr("moreurl");               
+            if (parseInt(count) > 10) {
+                var moreurl=$(".my_article_t_l.my_article_t_cur").attr("moreurl");
                 if (moreurl != "") {
                     //objfootright.append("<li style=\"padding-left: 200px;\"><a href='" + moreurl + "' target=\"_blank\">更多</a></li>");
                     $(".my_more").remove();
@@ -2174,7 +2174,7 @@ $('.but-comment-topicon').on('click',function(){
 $(function(){
     var oBlog_line = {
         markdown_line:function(){
-          $(".markdown_views pre").addClass("prettyprint");       
+          $(".markdown_views pre").addClass("prettyprint");
             // prettyPrint();
             $('pre.prettyprint code').each(function () {
                 var lines = $(this).text().split('\n').length;
@@ -2185,7 +2185,7 @@ $(function(){
                 };
                 $numbering.fadeIn(1700);
             });
-            $('.pre-numbering li').css("color","#999");             
+            $('.pre-numbering li').css("color","#999");
             setTimeout(function(){
                 $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
             });
@@ -2567,7 +2567,7 @@ $(function () { // 新背景详情页 博主信息区码云逻辑判断
         $('aside .inf_number_box dl:nth-child(4) dd').html('<a class="thinFont" href='+giteeIndex+' target="_blank">未开通</a>');
       }
     }
-    
+
   })
 });
 
@@ -2604,7 +2604,7 @@ $(function(){
   }
   $(document).on('click','.btn-pinglun',reachComment);
   $(document).on('click','.returnTop',function(){$('html,body').animate({scrollTop: 0}, 500);});
-  
+
   // focus event
   function contentFocus(){
     $(this).animate({height:84},500);
@@ -2625,7 +2625,7 @@ $(function(){
   }
   $(document).on('focus','.comment_content',contentFocus)
   $(document).on('click',contentBlur)
-  
+
   // 右侧推荐栏切换
   function newColumnTabSwitch(e){
     var $obj = $(e.srcElement || e.target),
@@ -2648,11 +2648,11 @@ $(function(){
     }
   }
   $(document).on('click','.new_column',newColumnTabSwitch)
-  
+
 
   overflow_hide($('.column-list .title'),44,'overflow-hide-host-height')
   overflow_hide($('.hotArticle-list a'),40 ,'overflow-hide-hotArticle-height')
   overflow_hide($('.imgAndText .right-text .title a'),48 ,'overflow-hide-right-text-height')
   overflow_hide($('.text .content a'),48 ,'overflow-hide-text-height')
-  
+
 })
