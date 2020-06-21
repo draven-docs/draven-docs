@@ -741,6 +741,90 @@ java -Dserver.port=8090 -Dcsp.sentinel.dashboard.server=172.16.244.128:8090 -Dpr
 
 
 
+
+
+
+
+# RocketMQ
+
+资料：
+
+https://www.imooc.com/article/290040
+
+环境搭建：
+
+见《官方+linux文档》
+
+官方参考：
+
+http://rocketmq.apache.org/docs/quick-start/
+
+各种搭建模式：
+
+https://www.itmuch.com/books/rocketmq/operation.html
+
+控制台搭建：
+
+见官网github
+
+深入学习:
+
+https://git.itmuch.com/coding-358/rocket-dev-guide
+
+Spring消息模型整合 参见官网springboot
+
+```yaml
+rocketmq:
+ name-server: 127.0.0.1:9876
+ producer:
+  # 必须指定groups
+  group: test-group 
+```
+
+```java
+rocketMQTemplate
+  
+```
+
+```java
+@RocketRocletMQMessageListener()
+implements RocketMQListener
+```
+
+## Spring Cloud Stream模型
+
+构建消息驱动的
+
+对接不同的mq平台
+
+```
+Source
+Sink
+
+
+ioc创建代理
+output
+input
+
+
+
+接口自定义实现
+```
+
+消息过滤
+
+tags
+
+conditions
+
+stream监控
+
+## 异常处理方式
+
+
+
+
+
 # FQA
 
 https://www.imooc.com/article289005
@@ -755,3 +839,6 @@ feign.FeignException: status 405 reading UserFeignClient#get0(User); content:
 {"timestamp":1482676142940,"status":405,"error":"Method Not Allowed","exception":"org.springframework.web.HttpRequestMethodNotSupportedException","message":"Request method 'POST' not supported","path":"/get"}
 ```
 
+
+
+@Builder注解
