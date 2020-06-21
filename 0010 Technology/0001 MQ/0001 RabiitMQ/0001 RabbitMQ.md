@@ -136,7 +136,7 @@ Exchange:生产者将消息发送到Exchange(交换器)，由Exchange将消息�
 
 Durability:是否做持久化 Durable(持久) transient(临时) Auto delete : 是否自动删除
 
-![RabbitMQ-Management](images/RabbitMQ-Management.png)
+![RabbitMQ-Management](../images/RabbitMQ-Management.png)
 
 # FQA
 

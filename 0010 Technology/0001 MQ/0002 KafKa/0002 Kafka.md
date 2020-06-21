@@ -297,7 +297,7 @@ Request.required.acks=0
 
 ## Replica恢复
 
-![kafka01](images/kafka01.png)
+![kafka01](../images/kafka01.png)
 
 
 
@@ -429,7 +429,7 @@ RAFT
 
 
 
-![kafka02](images/kafka02.png)
+![kafka02](../images/kafka02.png)
 
 
 
