@@ -1194,7 +1194,9 @@ environment抽象 生命周期 破坏性变更
 
 ### 嵌入式容器
 
-Servlet Web容器 Reactive Web容器
+Servlet Web容器
+
+Reactive Web容器
 
 ### 
 
@@ -1236,17 +1238,19 @@ Java 管理 JMX JSR3
 
 Web MVC Web Flux  JDBC
 
+```java
 @EnableAutoConfiguration
 
 /META-INF/spring.factories
 
 XXXAutoConfiguration
+```
 
 ## 
 
 ## 嵌入式容器
 
-tomcat jetty undertow
+
 
 Web server tomcat jetty undertow
 
@@ -1256,37 +1260,63 @@ Web reactive netty web server
 
 ## 生产准备特性
 
-指标 健康检查 外部化配置
+指标 /actuator/metrics
 
-/actuator
+健康检查 /actuator/health
 
-/metrics
+外部化配置 /actuator/configprops 
 
-/health
+### 传统Servlet应用
 
-/configprops
+#### Servlet 组件 
 
-Servlet 组件 Servlet Filter Listener
+##### Servlet注解
 
-Servlet注册 Servlet注解 Spring Bean、RegistrationBean
+servlet
 
-异步非阻塞 异步Servlet 非阻塞Servlet
+Filter
+
+Listener
+
+##### SpringBean
+
+servlet
+
+Filter
+
+Listener
+
+##### RegistrationBean
+
+
+
+#### 异步非阻塞 
+
+异步Servlet 
+
+非阻塞Servlet
 
 # 
 
-# MVC 引用
+# SpringMVC
 
 ## 
 
-## 视图
+## webmvc视图
+
+ViewResolver
+
+View
 
 ### 
 
 ### 模版引擎
 
-ViewResolver
+Thymeleaf
 
-View
+Freemarker
+
+JSP
 
 ### 
 
@@ -1314,25 +1344,39 @@ BasicErrorController(springboot)
 
 ## REST
 
-资源服务
+### 资源服务
 
 注解
 
-资源跨域
+@REquestMapping
 
-CrossOrigin
+   @GetMapping
 
-WebMvcConfigurer#addCorsMappings
+@ResponseBody
 
-传统方案
+@RequestBody
+
+
+
+### 资源跨域
+
+#### 传统方案
 
 ​	iframe
 
 ​	jsonp
 
-服务发现
+#### 建议采用
 
-HateOS
+@CrossOrigin
+
+WebMvcConfigurer#addCorsMappings
+
+
+
+#### 服务发现
+
+HateOS (Mapped)
 
 ## 
 
@@ -1350,22 +1394,26 @@ HateOS
 
 ## 核心组件
 
-```
+```java
 DispatcherServlet
-HandlerMqpping
+HandlerMapping
 HandlerAdapter
 ViewResolver
 ```
 
 # 
 
-# Web Flux
+# Spring Web Flux
 
 ## 
 
 ## Reactor基础
 
-Java lambda、 mono、 flux
+### Java lambda、 
+
+### mono
+
+### flux
 
 ## 
 
@@ -1393,13 +1441,19 @@ Net Reactor
 
 ### 场景
 
+页面渲染
+
+REST应用
+
 # 
 
-# web server应用
+# Web server应用
 
-切换web server
+1.切换web server(tomcat->jetty->undow)
 
-```
+2.web->webflux
+
+```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-webflux</artifactId>
@@ -1440,19 +1494,23 @@ ReactiveWebServerFactoryCustomizer
 
 ### 
 
-### 数据源 DataSource
+#### 数据源 
+
+java.sql.DataSource
 
 ### 
 
-### JdbcTemplate
+#### JdbcTemplate
 
 ### 
 
-### 自动装配
+##### 自动装配
+
+DataSourceAutoConfiguration
 
 ## 
 
-## JPA
+### JPA
 
 ```
 <dependency>
@@ -1463,23 +1521,31 @@ ReactiveWebServerFactoryCustomizer
 
 ### 
 
-### 实体映射关系
+#### 实体映射关系
+
+@javax.persistence.OneToOne
+
+@javax.persistence.OneToMany
+
+@javax.persistence.ManyToOne
+
+@javax.persistence.ManyToMany
 
 ### 
 
-### 实体操作
+#### 实体操作
 
 java.persistence.Entitymanager
 
 ### 
 
-### 自动装配
+#### 自动装配
 
-hibernateJpaxxx
+hibernateJpaAutoConfiguration
 
 ## 
 
-## 事务
+### 事务
 
 ```
 <dependency>
@@ -1490,7 +1556,7 @@ hibernateJpaxxx
 
 ### 
 
-### Spring事务抽象
+#### Spring事务抽象
 
 ```
 PlatformTransactionManager
@@ -1498,7 +1564,7 @@ PlatformTransactionManager
 
 ### 
 
-### JDBC事务处理
+#### JDBC事务处理
 
 ```
 DataSourceTransactionManager
@@ -1506,11 +1572,13 @@ DataSourceTransactionManager
 
 ### 
 
-### 自动装配
+#### 自动装配
+
+
 
 # Springboot
 
-##SpringApplication
+## SpringApplication
 
 ### 失败分析
 
@@ -1522,13 +1590,13 @@ FailureAnalysisReporter
 
 SpringApplication Fluent API
 
-事件监听
+### 事件监听
 
 ## 配置
 
 ### 外部化配置
 
-ConfigurationPropertity
+ConfigurationProperty
 
 ### @Profile
 
@@ -1538,25 +1606,37 @@ PropertySources
 
 ## Starter
 
+### 开发
+
+### 实践
+
 # 运维管理
 
-## 端点
+## Spring Boot Actuator
 
-Web 
+### 端点
 
-JMX Endpoints
+#### Web Endpoints
+
+#### JMX Endpoints
 
 ## 健康检查
 
-Health
+### Health
 
-healthIndicator
+### healthIndicator
 
 ## 指标
 
-内建 Metrics
+### 内建 Metrics
 
-自定义 Metrics
+### 自定义 Metrics
+
+# 大纲 end
+
+
+
+
 
 # 自动装配
 
@@ -1564,15 +1644,17 @@ healthIndicator
 
 ### 模式注解
 
-@Component
+https://github.com/spring-projects/spring-framework/wiki/Spring-Annotation-Programming-Model
 
-@Service
+@Component 2.5
 
-@Respository
+​	@Service 2.5
 
-@Controller
+​	@Respository 2.0
 
-@Configuration
+​	@Controller 2.5
+
+@Configuration 3.0
 
 #### 装配
 
@@ -1582,11 +1664,163 @@ healthIndicator
 
 
 
-# 大纲end
+#### 原理
+
+##### 派生性
+
+##### 层次性
+
+### @Enable模块装配
+
+3.1
+
+@EnableWebMvc  
+
+@EnableTransactionManagement 事务管理器
+
+@EnableCaching   Caching模块
+
+@EnableMbeanExport JMX模块
+
+@EnableAsync 异步处理模块
+
+@EnableFlux  WebFlux模块
+
+@EnableAspectJAutoProxy AspectJ代理模块
+
+
+
+@EnableAutoCOnfiguration
+
+@EnableManagementContext
+
+@EnableConfigurationProperties
+
+@EnableAuto2Sso
+
+
+
+@EnableEurekaServer
+
+@EnableConfigServer
+
+@EnableFeginClients
+
+@EnableZuulProxy
+
+@EnableCiruitBreaker
+
+#### 原理
+
+##### 注解驱动
+
+```java
+@xxx
+@xxx
+@Import(DelegatingWebMvcConfiguration.class)
+public @interface EnableWebMvc{
+  
+}
+
+
+@Configuration
+public class DelegatingWebMvcConfiguration extends WebMvcConfigurationSupport{
+  //...
+}
+```
+
+
+
+##### 接口编程
+
+```java
+@xxx
+...
+@Import(CachingConfigurationSelector.class) 
+public @interface EnableCaching{
+  
+} 
+
+
+public class CachingConfigurationSelector extend AdviceModeImportSelector<EnableCaching>{
+  // ...
+  public String[] selectImports(AdviceMode adviceMode){
+    //...
+  }
+}
+```
+
+## 条件装配
+
+### 注解编程
+
+#### 基于配置方式
+
+@Profile 
+
+配置化条件装配
+
+3.1
+
+#### 基于编程方式
+
+​	@ConditionalOnSystemProperty
+
+@Conditional
+
+编程条件装配
+
+4.0
+
+### 编程方式
+
+# SpringBoot 自动装配
+
+## 模式注解
+
+@Enable模块
+
+条件装配
+
+工厂加载机制
+
+SpringFactoriesLoader
+
+META/spring.factories
+
+激活自动装配
+
+实现自动装配
+
+@EnableAutoConfiguration
+
+xxxAutoConfiguration
+
+META-INF/spring.factories
 
 
 
 
+
+
+
+
+
+# 外部化配置
+
+XMLBean占位符
+
+@Value
+
+Environment
+
+
+
+@ConfigurationProperties
+
+
+
+@ConditionalOnProperty
 
 
 
