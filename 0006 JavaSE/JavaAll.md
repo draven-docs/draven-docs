@@ -244,6 +244,9 @@ System Classloader
 ```java
 Class clazz = Object.class;
 // 创建对应的运行时类的对象 调用的是空参构造
+// 运行时类必须提供空参构造器 Å
+// 空餐构造器的访问权限必须足够-一般是public
+
 Object obj = clazz.newInstance()
 sout;
   
@@ -254,4 +257,38 @@ sout;
 # 反射结合注解
 
 注解结合信息处理流程（反射）
+
+# 枚举类enum
+
+```java
+// 实现接口的枚举类
+// 类的对象只有有限个，确定
+// 当需要一组常量时，建议使用枚举
+
+public enum EnumTest{
+  // 当前枚举类的对象 多个对象之间使用逗号 末尾使用分号
+  SPRING("",""),
+  WINTER("","");
+  
+  
+  // 同时提供私有构造
+  // 声明属性字段
+  // setter/getter
+  
+  
+  // enum的常用方法
+  // 获取当枚举类的常量 SPRING WINTER
+  EnumTest[] values = EnumTest.values()
+  // 重写
+  toString() 
+   
+  // 根据具体值(SPRING)获取当前对象   SPRING("",""),
+  EnumTest spring =  EnumTest.valueOf("SPRING");
+ 
+}
+
+
+
+  
+```
 
