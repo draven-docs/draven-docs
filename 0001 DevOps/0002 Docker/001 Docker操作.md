@@ -502,5 +502,57 @@ docker attach <container name>
 # 未使用过
 docker inspect --format='{{.NetworkSettings.IPAddress}}' <container name>
 docker inspect -f='{{.NetworkSettings.IPAddress}}' <container name>
+
+
+# 方法一：
+
+#显示所有的容器，过滤出Exited状态的容器，取出这些容器的ID，
+
+sudo docker ps -a|grep Exited|awk '{print $1}'
+
+#查询所有的容器，过滤出Exited状态的容器，列出容器ID，删除这些容器
+
+sudo docker rm `docker ps -a|grep Exited|awk '{print $1}'`
+
+
+# 方法二： 
+
+#删除所有未运行的容器（已经运行的删除不了，未运行的就一起被删除了）
+
+sudo docker rm $(sudo docker ps -a -q)
+
+
+# 方法三：
+
+#根据容器的状态，删除Exited状态的容器
+
+sudo docker rm $(sudo docker ps -qf status=exited)
+
+
+# 方法四：
+
+#Docker 1.13版本以后，可以使用 docker containers prune 命令，删除孤立的容器。
+
+sudo docker container prune
+
+1 批量删除容器
+docker rm docker ps -a -q || docker rm $(docker ps -a -q)
+2 批量删除镜像
+docker rmi docker images -q
+3 按条件过滤删除
+docker rmi -f docker images | grep '<none>' | awk '{print $3}' #删除名称或标签为none的镜像
+
+docker rmi  $(docker images | grep '<none>'  | awk '{print $3}')
+
+
+4 查看所有容器id
+docker ps -a -q
+5 停止所有容器
+docker stop $(docker ps -a -q)
+
+
+#删除所有镜像
+
+sudo docker rmi $(docker images -q)
 ```
 
