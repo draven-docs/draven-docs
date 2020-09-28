@@ -32,6 +32,51 @@ https://docs.python.org/zh-cn/3/
 
 异常
 
+```shell
+# 异常处理
+try/except
+
+# 1.捕捉异常
+
+# 2.捕捉多个异常
+	try:
+		xxx
+	except ZeroDrivisionError:
+		print("yyy")
+	except Exception:
+		print("xxx")
+# 3.块捕捉异常
+	try:
+		xxx
+	except （ZeroDrivisionError,TypeError）:
+		print("yyy")
+		
+# 4.捕捉对象
+	try:
+		xxx
+	except （ZeroDrivisionError,TypeError）as e:
+		print(e)
+# 5.全捕捉
+	try:
+		xxx
+	except:
+		print("")
+
+# 6.else语句
+	try:
+    	print("")
+	except:
+    	print("")
+	else:
+		print("")
+		
+# 7.try-finally
+	try:
+		print()
+	except:
+		print()
+```
+
 文件IO
 
 类/对象
