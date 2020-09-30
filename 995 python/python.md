@@ -236,7 +236,33 @@ import os.path
     # setters getters
 ```
 
-模块
+## 模块
+
+```python
+# 简单的理解 是函数的堆积  
+# from modelname import member
+from math
+from math import *
+from math import pi
+
+
+
+# 包
+__init__.py
+size.py
+
+
+
+# import + 完整包名.模块名
+# from + 完整包名 + import + 模块名
+# from + 完整包名.模块名 + import + 定义名
+
+
+
+# 引入其他模块
+# 安装命令
+pip <command>  [modulename]
+```
 
 
 
@@ -296,6 +322,8 @@ import os.path
 
 ## Page Object
 
+一种设计模式(讲的太简单)
+
 
 
 # Jmeter
@@ -353,6 +381,55 @@ testdown
 # 接口测试
 
 # Request库
+
+https://requests.readthedocs.io/zh_CN/latest/user/quickstart.html
+
+```python
+# HTTP请求
+Urllib
+Httplip2 
+Requests
+
+# 安装 
+pip install requests
+
+	# 验证
+    
+    import requests
+    base_url = "https://test.com"
+    requests.get(base_url+'/get')
+	
+    # 传参
+    import requests
+    base_url = "https://test.com"
+    param_data={'user':'wang','password':'123'}
+    # 爬虫定制请求头
+    headers={'user-agent':'Mozilla/5.0'}
+    requests.get(base_url+'/get',param=param_data)
+    requests.post(base_url+'/post',data=param_data,headers=header)
+
+ # Cookies
+    import requests
+    base_url = "https://test.com"
+    param_data={'user':'wang','password':'123'}
+    # 爬虫定制请求头
+    headers={'user-agent':'Mozilla/5.0'}
+    cookie={'user':'wang'}
+    requests.get(base_url+'/get',param=param_data,cookies=cookie,timeout=1)
+    requests.post(base_url+'/post',data=param_data,headers=header,cookies=cookie，timeout=1)
+    
+    
+    requests.cookies
+    for key,value in requests.cookiesitems():
+        print(key + ':' + value)
+  # 文件上传
+	file={'file':open(''，'rb')} requests.post(base_url+'/post',files=file,data=param_data,headers=header,cookies=cookie，timeout=1)
+ 
+ # 会话对象 session会话控制 ??
+  requests.Session()
+```
+
+
 
 # 移动端测试理论
 
