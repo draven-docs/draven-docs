@@ -1,23 +1,16 @@
-# SpringBoot
-
+SpringBoot
 链接：https://spring.io/
 
 ![](assets\diagram-boot-reactor.svg)
 
-## 启动流程
-
+启动流程
 主方法跟踪
 
-## 新特点
-
-### spring-webflux
-
-### http
-
-### reactive streams
-
-# 开始
-
+新特点
+spring-webflux
+http
+reactive streams
+开始
 链接：https://spring.io/guides/gs/spring-boot/
 
 ![](assets\Getting Started Guide.png)
@@ -38,36 +31,28 @@
 
 ![](assets\Spring Boot 2.0 Release Notes.png)
 
-## Spring Initializr
-
-链接：<https://start.spring.io/>
+Spring Initializr
+链接：https://start.spring.io/
 
 ![](assets\Spring Initializr Bootstrap your application.png)
 
 这里只演示一种
 
-```shell
+
 1通过Web界面使用-->http://start.spring.io
 2通过Spring Tool Suite使用。
 3通过IntelliJ IDEA使用。
 4使用Spring Boot CLI使用。
-```
-
-
-
-## 文档
-
-链接：<https://docs.spring.io/spring-boot/docs/2.1.0.BUILD-SNAPSHOT/reference/htmlsingle/#using-boot-using-the-default-package>
+文档
+链接：https://docs.spring.io/spring-boot/docs/2.3.5.RELEASE/reference/htmlsingle/#using-boot-using-the-default-package
 
 ![](assets\Spring Boot Reference Guide.png)
 
-## 环境搭建
-
+环境搭建
 使用IDEA软件即可
 
-### Maven Installation
+Maven Installation
 
-```xml
 <?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">  
   <modelVersion>4.0.0</modelVersion>  
@@ -78,13 +63,13 @@
   <parent> 
     <groupId>org.springframework.boot</groupId>  
     <artifactId>spring-boot-starter-parent</artifactId>  
-    <version>2.2.1.BUILD-SNAPSHOT</version> 
+    <version>2.3.5.RELEASE</version> 
   </parent>  
   <!-- 正式版本 -->
   <parent> 
     <groupId>org.springframework.boot</groupId>  
     <artifactId>spring-boot-starter-parent</artifactId>  
-    <version>2.2.0.RELEASE</version> 
+    <version>2.3.5.RELEASE</version>
   </parent> 
   <!-- Add typical dependencies for a web application -->  
   <dependencies> 
@@ -128,174 +113,151 @@
     </pluginRepository> 
   </pluginRepositories> 
 </project>
-```
-
-
-
-### Gradle Installation
-
+Gradle Installation
 不怎么用
 
-### Installing the Spring Boot CLI
-
+Installing the Spring Boot CLI
 不使用
 
-# 配置文件
 
+https://repo.spring.io/release/org/springframework/boot/spring-boot-cli/2.3.5.RELEASE/spring-boot-cli-2.3.5.RELEASE-bin.tar.gz
+总结
+ mvn spring-boot:run
+  running the example
+
+ creating an Executable Jar
+注意看官方文档有描述
+
+
+<!-- xx.jar中没有主清单属性 -->
+<build>
+  <plugins>
+  <plugin>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-maven-plugin</artifactId>
+  </plugin>
+  </plugins>
+</build>
+ Starters
+
+All official starters follow a similar naming pattern; spring-boot-starter-*
+​
+A third-party starter project
+called thirdpartyproject would typically be named thirdpartyproject-spring-boot-starter
+配置文件
 xml,properties,json,yaml
 
-### application.yml
-
-### application.properties
-
+application.yml
+application.properties
 链接：https://docs.spring.io/spring-boot/docs/2.1.0.BUILD-SNAPSHOT/reference/htmlsingle/#appendix
 
 SpringBoot注解把配置文件自动映射到属性和实体类实战
 	简介：讲解使用@value注解配置文件自动映射到属性和实体类
 
-# Spring Boot Features
+Spring Boot Features
+Developer Tools
+开发工具
 
-## Developer Tools
-
-### 开发工具
-
-```
  自动重启：当Classpath里的文件发生变化时，自动重启运行中的应用程序。
  LiveReload支持：对资源的修改自动触发浏览器刷新。
  远程开发：远程部署时支持自动重启和LiveReload。
  默认的开发时属性值：为一些属性提供有意义的默认开发时属性值。
-```
+自动重启
 
-### 自动重启
-
-```xml
 <dependencies>
   <dependency>
-  	<groupId>org.springframework.boot</groupId>
-  	<artifactId>spring-boot-devtools</artifactId>
-  	<optional>true</optional>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-devtools</artifactId>
+    <optional>true</optional>
   </dependency>
 </dependencies>
-```
+排除重启资源
 
-#### 排除重启资源
-
-```yaml
 spring: 
  devtools: 
  restart: 
  exclude: /static/**,/templates/**
-```
+禁止重启
 
-#### 禁止重启
-
-```yaml
 spring: 
  devtools: 
  restart: 
  enabled: false
-```
+触发文件
 
-#### 触发文件
-
-```yaml
 spring: 
   devtools: 
   restart: 
   trigger-file: .trigger
-```
+LiveReload
 
-### LiveReload
-
-```yaml
 spring: 
   devtools: 
   livereload: 
   enabled: false
-```
+默认的开发属性
 
-### 默认的开发属性
-
-```
  spring.thymeleaf.cache
  spring.freemarker.cache
  spring.velocity.cache
  spring.mustache.cache
  spring.groovy.template.cache
-```
+全局配置开发者工具
 
-### 全局配置开发者工具
-
-```
 spring.devtools.restart.trigger-file=.trigger 
 spring.devtools.livereload.enabled=false 
-```
-
-#### 远程开发
-
+远程开发
 不被热部署的文件有哪些？
 
-### 总结	
+总结	
 
-```
 #资源加载顺序
 web.upload-path=/Users/jack/Desktop
 spring.resources.static-locations=classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,classpath:/test/,file:${web.upload-path}
-
+​
 #指定某些文件不进行监听，即不会进行热加载
 #spring.devtools.restart.exclude=application.properties
-
+​
 #通过触发器，去控制什么时候进行热加载部署新的文件，改代码不重启，通过一个文本去控制
-spring.devtools.restart.trigger-file=trigger.txt 			
-```
-
+spring.devtools.restart.trigger-file=trigger.txt            
 链接：https://docs.spring.io/spring-boot/docs/2.1.0.BUILD-SNAPSHOT/reference/htmlsingle/#using-boot-devtools-restart-exclude
 
  	注意点：生产环境不要开启这个功能，如果用java -jar启动，springBoot是不会进行热部署的
 
-## 读取配置文件
-
+读取配置文件
 注入bean的方式，属性名称和配置文件里面的key一一对应，就用加@Value 这个注解
 如果不一样，就要加@value("${XXX}")
 
-### Environment
+Environment
 
-```java
 @RestController
 public class HelloWorldController {
-	@Resource
-	private Environment environment;
-	@RequestMapping("info")
-	public String info() {
-	System.out.println(environment.getProperty("name"));
-	System.out.println(environment.getProperty("url"));
-	return "Hello world!";
-	}
+    @Resource
+    private Environment environment;
+    @RequestMapping("info")
+    public String info() {
+    System.out.println(environment.getProperty("name"));
+    System.out.println(environment.getProperty("url"));
+    return "Hello world!";
+    }
 }
-```
+@Value
 
-### @Value
-
-```java
 @RestController
 public class HelloWorldController {
-	@Value("${name}")
-	private String name;
-
-	@Value("${url}")
-	private String url;
-
-	@RequestMapping("info")
-	public String info() {
-		return "Hello world!";
-	}
+    @Value("${name}")
+    private String name;
+​
+    @Value("${url}")
+    private String url;
+​
+    @RequestMapping("info")
+    public String info() {
+        return "Hello world!";
+    }
 }
-```
-
-### 配置文件加载
-
-#### java配置
-
+配置文件加载
+java配置
  特性
 	@Configuration
 		声明为配置类-->替代XML
@@ -310,116 +272,95 @@ public class HelloWorldController {
 	application.properties
 	application.yml
 
-#### 加载顺序
+加载顺序
 
-```
 数字越小，优先级越高
 1.命令行中传入参数
 2.spring_application_json 中的属性
-	spring_application_json是以json格式配置在系统环境变量中的内容
+    spring_application_json是以json格式配置在系统环境变量中的内容
 3.java:comp/env中的JNDI属性
 4.Java的系统属性，可以通过System.getProperties()获取
 5.操作系统的环境变量
 6.通过random.*配置的随机属性
 7.位于jar包之外，针对不同{profiles}环境的配置文件内容
-	例：application-{profiles}.properties/yml
+    例：application-{profiles}.properties/yml
 8.位于房前应用jar包制备，针对不同{profiles}环境的配置文件内容，
-	例:application-{profiles}.properties/yml
+    例:application-{profiles}.properties/yml
 9.位于当前应用jar包之外的application.properties/yml
 10.位于房前应用jar包之内的application.properties/yml
 11.在@Configuration注解修改的类中，通过@PropertySource注解定义的属性
 12.应用默认属性，使用SpringApplication.setDefaultProperties定义的内容
-```
+外部配置文件
 
+    1、Controller上面配置
+       @PropertySource({"classpath:resource.properties"})
+    2、增加属性
+         @Value("${test.name}")
+         private String name;
 
-
-#### 外部配置文件
-
-​		1、Controller上面配置
-​		   @PropertySource({"classpath:resource.properties"})
-​		2、增加属性
-​			 @Value("${test.name}")
-​	 		 private String name;
-
-```java
 @RestController
 @PropertySource({"classpath:resource.properties"})
 public class HelloWorldController {
-	@Value("${name}")
-	private String name;
-	
-	@Value("${url}")
-	private String url;
-
-	@RequestMapping("info")
-	public String info() {
+    @Value("${name}")
+    private String name;
+    
+    @Value("${url}")
+    private String url;
+​
+    @RequestMapping("info")
+    public String info() {
          System.out.println("用户名："+name);
          System.out.println("用户名："+url);
-		return name+""+url;
-	}
+        return name+""+url;
+    }
 }
-```
+实体类配置文件
 
+步骤：
+    1、添加 @Component 注解；
+    2、使用 @PropertySource 注解指定配置文件位置；
+    3、使用 @ConfigurationProperties 注解，设置相关属性；
+​
+    4、必须 通过注入IOC对象Resource 进来 ， 才能在类中使用获取的配置文件值。
+        @Autowired
+        private ServerSettings serverSettings;
+无前缀
 
-
-#### 实体类配置文件
-
-​	步骤：
-​		1、添加 @Component 注解；
-​		2、使用 @PropertySource 注解指定配置文件位置；
-​		3、使用 @ConfigurationProperties 注解，设置相关属性；
-
-​		4、必须 通过注入IOC对象Resource 进来 ， 才能在类中使用获取的配置文件值。
-​			@Autowired
-​    		private ServerSettings serverSettings;
-
-##### 无前缀
-
-```java
 @Component
-@ConfigurationProperties			@PropertySource(value="classpath:resource.properties")
+@ConfigurationProperties            @PropertySource(value="classpath:resource.properties")
 public class ServerConstant {
-	@value("{自定义key}")
-	private xxx xxx；
+    @value("{自定义key}")
+    private xxx xxx；
 }
-```
+前缀
 
-##### 前缀
-
-```java
 @Component
-@ConfigurationProperties(prefix="test")				@PropertySource(value="classpath:resource.properties")
+@ConfigurationProperties(prefix="test")             @PropertySource(value="classpath:resource.properties")
 public class ServerConstant {
-	//注：此处不需要@Value
-	private xxx xxx；
+    //注：此处不需要@Value
+    private xxx xxx；
     //请设置 setter getter方法
     //若 配置数据库 则只设置getter方法
 }
-```
+常见问题：
 
-### 常见问题：
-
-​			1、配置文件注入失败，Could not resolve placeholder
-​				解决：根据springboot启动流程，会有自动扫描包没有扫描到相关注解, 
-​				默认Spring框架实现会从声明@ComponentScan所在的类的package进行扫描，来自动注入，
-​				因此启动类最好放在根路径下面，或者指定扫描包范围
-​				spring-boot扫描启动类对应的目录和子目录
-​			2、注入bean的方式，属性名称和配置文件里面的key一一对应，就用加@Value 这个注解
-​				如果不一样，就要加@value("${XXX}")
-
-
-
-## 多环境配置
-
+        1、配置文件注入失败，Could not resolve placeholder
+            解决：根据springboot启动流程，会有自动扫描包没有扫描到相关注解, 
+            默认Spring框架实现会从声明@ComponentScan所在的类的package进行扫描，来自动注入，
+            因此启动类最好放在根路径下面，或者指定扫描包范围
+            spring-boot扫描启动类对应的目录和子目录
+        2、注入bean的方式，属性名称和配置文件里面的key一一对应，就用加@Value 这个注解
+            如果不一样，就要加@value("${XXX}")
+多环境配置
 方便多环境切换
 
 格式：{application-{profile}.yml}
 
-```yml
+
 # application.yml
 test: 
  url: application-local
-
+​
 # 指定使用哪个环境
 spring:
  profiles:
@@ -428,11 +369,11 @@ spring:
 # application-dev.yml
 test: 
  url: application-dev
-
+​
 # application-test.yml
 test: 
  url: application-test
-
+​
 # application-pre.yml
 test: 
  url: application-pre
@@ -440,13 +381,9 @@ test:
 # application-pro.yml
 test: 
  url: application-pro
-```
+整合web模板
+总体描述
 
-## 整合web模板
-
-### 总体描述
-
-```shell
  实现了Spring的View接口的Bean，其 ID为error（由Spring的BeanNameViewResolver
 所解析）。
  如果配置了Thymeleaf，则有名为error.html的Thymeleaf模板。
@@ -463,12 +400,8 @@ test:
 64 第 3 章 自定义配置
  trace：异常跟踪信息（如果这个错误是由异常引起的）。
  path：错误发生时请求的URL路径。
-```
-
-## SpringApplication
-
-### Spring Framework
-
+SpringApplication
+Spring Framework
 Spring 应用上下文
 
 Spring工厂加载机制
@@ -479,8 +412,7 @@ Spring Environment抽象
 
 Spring 应用事件/监听器
 
-### Spring Boot
-
+Spring Boot
 SpringApplication
 
 SpringApplication Builder API
@@ -493,12 +425,7 @@ SpringApplication 故障分析
 
 Spring Boot 应用事件/监听器
 
-
-
-
-
-## 特点
-
+特点
 自动配置：针对很多Spring应用程序常见的应用功能，Spring Boot能自动提供相关配置。
 
 起步依赖：告诉Spring Boot需要什么功能，它就能引入需要的库。
@@ -509,39 +436,30 @@ Spring Boot 应用事件/监听器
 
 Actuator：让你能够深入运行中的Spring Boot应用程序，一探究竟。
 
-```
+
 Spring应用程序上下文里配置的Bean 
 Spring Boot的自动配置做的决策
 应用程序取到的环境变量、系统属性、配置属性和命令行参数
 应用程序里线程的当前状态
 应用程序最近处理过的HTTP请求的追踪情况
-```
+Spring Boot CLI
+安装
 
-## Spring Boot CLI
-
-### 安装
-
-```
 用下载的分发包进行安装
 用Groovy Environment Manager进行安装。
 通过OS X Homebrew进行安装。
 使用MacPorts进行安装
-```
-
-## 自动配置
-
-### @Conditional
-
+自动配置
+@Conditional
 Spring4推出了专注于功能开发，继@Conditional注解后，又基于此注解推出了很多派生注解，比如@ConditionalOnBean、@ConditionalOnMissingBean、@ConditionalOnExpression、@ConditionalOnClass......动态注入bean变得更方便了
 原文：https://blog.csdn.net/xcy1193068639/article/details/81517456 
 
-## 覆盖自动配置
-
+覆盖自动配置
 有点疑问
 
 属性文件配置
 
-```
+
 (1) 命令行参数
 (2) java:comp/env里的JNDI属性
 (3) JVM系统属性
@@ -559,21 +477,19 @@ application.properties和application.yml文件能放在以下四个位置。
 (2) 外置，在应用程序运行的目录里。
 (3) 内置，在config包内。
 (4) 内置，在Classpath根目录
-
+​
 同样，这个列表按照优先级排序。也就是说，/config子目录里的application.properties会覆盖
 应用程序Classpath里的application.properties中的相同属性。
 此外，如果你在同一优先级位置同时有application.properties和application.yml，那么application. 
 yml里的属性会覆盖application.properties里的属性。
 禁用ascii-art Banner只是使用属性的一个小例子。让我们再看几个例子，看看如何通过常用
 途径微调自动配置的Bean。
-```
-
 例如：禁用模板缓存
 
-```
+
 1.$ java -jar readinglist-0.0.1-SNAPSHOT.jar --spring.thymeleaf.cache=false 
   $ java -jar readinglist-0.0.1-SNAPSHOT.jar --server.port=8000
-
+​
 2.spring: 
  thymeleaf: 
  cache: false
@@ -582,34 +498,23 @@ yml里的属性会覆盖application.properties里的属性。
  port: 8000 
  
 3.$ export spring_thymeleaf_cache=false 
-
+​
  spring.freemarker.cache（Freemarker）
  spring.groovy.template.cache（Groovy模板）
  spring.velocity.cache（Velocity）
-```
-
-### 配置数据源
-
+配置数据源
 datasource
 
-```
+
 driver-class-name：
  HikariCP 
  Commons DBCP 
  Commons DBCP 2 
-
+​
 spring.datasource.jndi-name：java:/comp/env/jdbc/readingListDS
-```
+深入Actuator
+Actuator 的端点
 
-
-
-
-
-## 深入Actuator
-
-### Actuator 的端点
-
-```
 GET /autoconfig 提供了一份自动配置报告，记录哪些自动配置条件通过了，哪些没通过
 GET /configprops 描述配置属性（包含默认值）如何注入Bean 
 GET /beans 描述应用程序上下文里全部的Bean，以及它们的关系
@@ -624,24 +529,18 @@ GET /metrics 报告各种应用程序度量信息，比如内存用量和HTTP请
 GET /metrics/{name} 报告指定名称的应用程序度量值
 POST /shutdown 关闭应用程序，要求endpoints.shutdown.enabled设置为true
 GET /trace 提供基本的HTTP请求跟踪信息（时间戳、HTTP头等）
-```
+说明
 
-### 说明
-
-```
  bean：Spring应用程序上下文中的Bean名称或ID。
  resource：.class文件的物理位置，通常是一个URL，指向构建出的JAR文件。这会随着
 应用程序的构建和运行方式发生变化。
  dependencies：当前Bean注入的Bean ID列表。
  scope：Bean的作用域（通常是单例，这也是默认作用域）。
  type：Bean的Java类型。
-```
-
-#### 配置
-
+配置
 建议根据不同版本参考官网
 
-```
+
 management:
  endpoints:
   web:
@@ -654,68 +553,41 @@ management:
    status:
     http-mapping: # 自定义健康检查返回状态码对应的http状态码
      FATAL: 503
-```
-
-
-
-
-
-
-
-
-
-
-
-## 集成测试
-
+集成测试
 在Spring 4.2里，你可以选择基于规则的SpringClassRule和SpringMethodRule来代替SpringJUnit4ClassRunner
 
-```
+
 @RunWith(SpringJUnit4ClassRunner.class) 
 @ContextConfiguration( classes=AddressBookConfiguration.class)
-
+​
 @RunWith(SpringJUnit4ClassRunner.class) 
 @SpringApplicationConfiguration(classes=AddressBookConfiguration.class) 
-```
-
-### MockMvc
-
+MockMvc
 模拟 Spring MVC 
 
  Spring Mock MVC：能在一个近似真实的模拟Servlet容器里测试控制器，而不用实际启动
 应用服务器。
 
-```
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration( 
  classes = ReadingListApplication.class) 
 @WebAppConfiguration
-```
-
  Web集成测试：在嵌入式Servlet容器（比如Tomcat或Jetty）里启动应用程序，在真正的应
 用服务器里执行测试
 
-
-
 使用 Selenium 测试 HTML 页面
 
-
-
-## Groovy与Spring Boot CLI 
-
+Groovy与Spring Boot CLI 
 略
 
-## 在Spring Boot中使用Grails
-
+在Spring Boot中使用Grails
 略
 
-
-
-### SpringBoot Starter
-
+SpringBoot Starter
 链接：https://docs.spring.io/spring-boot/docs/2.1.0.BUILD-SNAPSHOT/reference/htmlsingle/#using-boot-starter
 
-```java
+
 常用starter
 spring-boot-starter-web
 spring-boot-starter-activemq
@@ -724,29 +596,21 @@ spring-boot-starter-data-redis
 spring-boot-starter-freemarker
 spring-boot-starter-thymeleaf
 spring-boot-starter-webflux
-```
-
-### thymeleaf
-
+thymeleaf
 链接：https://www.thymeleaf.org/doc/articles/standarddialect5minutes.html
 
-```
+
 轻量级的模板引擎（负责逻辑业务的不推荐，解析DOM或者XML会占用多的内存）
 可以直接在浏览器中打开且正确显示模板页面
 直接是html结尾，直接编辑
 xdlcass.net/user/userinfo.html
-```
+pom.xml
 
-#### pom.xml
-
-```java
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-thymeleaf</artifactId>
 </dependency>
-```
 
-```yaml
 #开发时关闭缓存,不然没法看到实时页面
 spring.thymeleaf.cache=false
 spring.thymeleaf.mode=HTML5
@@ -758,115 +622,86 @@ spring.thymeleaf.encoding=UTF-8
 spring.thymeleaf.content-type=text/html
 #名称的后缀
 spring.thymeleaf.suffix=.html
-```
+编写页面
 
-#### 编写页面
-
-```
 resource/templates/index.html
-```
+语法
+Freemaker
 
-#### 语法
-
-### Freemaker
-
-```
 FreeMarker Template Language（FTL）  文件一般保存为 xxx.ftl
 严格依赖MVC模式，不依赖Servlet容器（不占用JVM内存）
 内建函数
-```
+pom.xml
 
-#### pom.xml
-
-```java
 <dependency>
        <groupId>org.springframework.boot</groupId>
        <artifactId>spring-boot-starter-freemarker</artifactId></dependency>
-```
 
-```yaml
 #是否开启thymeleaf缓存,本地为false，生产建议为true
 spring.freemarker.cache=false
-
+​
 spring.freemarker.charset=UTF-8
 spring.freemarker.allow-request-override=false
 spring.freemarker.check-template-location=true
-	
+    
 #类型
 spring.freemarker.content-type=text/html
-
+​
 spring.freemarker.expose-request-attributes=true
 spring.freemarker.expose-session-attributes=true
-	
+    
 #文件后缀
 spring.freemarker.suffix=.ftl
 #路径
 spring.freemarker.template-loader-path=classpath:/templates/
-```
 
-```
 1)src/main/resources/templates/fm/user/
 2)建立一个index.ftl
 3)user文件夹下面建立一个user.html
-```
-
-#### 语法
-
-### Jsp
-
+语法
+Jsp
 （后端渲染，消耗性能）
 
 springboot不推荐 https://docs.spring.io/spring-boot/docs/2.1.0.BUILD-SNAPSHOT/reference/htmlsingle/#boot-features-jsp-limitations
 
-```
+
 Java Server Pages 动态网页技术,由应用服务器中的JSP引擎来编译和执行，再将生成的整个页面返回给客户端
 可以写java代码
 持表达式语言（el、jstl）
 内建函数
 JSP->Servlet(占用JVM内存)permSize
-javaweb官方推荐		
-```
+javaweb官方推荐     
+测试
+测试类
 
-
-
-
-
-## 测试
-
-### 测试类
-
-```java
 @RunWith(SpringRunner.class)  //底层用junit  SpringJUnit4ClassRunner
 @SpringBootTest(classes={HttpApplication.class})//启动整个springboot工程
 public class SpringBootTestDemo {
     @Test
-	public void testOne(){
-		System.out.println("test hello 1");
-		TestCase.assertEquals(1, 1);
-	}
-	@Test
-	public void testTwo(){
-		System.out.println("test hello 2");
-		TestCase.assertEquals(1, 1);
-	}
+    public void testOne(){
+        System.out.println("test hello 1");
+        TestCase.assertEquals(1, 1);
+    }
+    @Test
+    public void testTwo(){
+        System.out.println("test hello 2");
+        TestCase.assertEquals(1, 1);
+    }
 }
-```
+MockMvc
 
-### MockMvc
+        perform：执行一个RequestBuilder请求
+        andExpect：添加ResultMatcher->MockMvcResultMatchers验证规则
+        andReturn：最后返回相应的MvcResult->Response
 
-​			perform：执行一个RequestBuilder请求
-​			andExpect：添加ResultMatcher->MockMvcResultMatchers验证规则
-​			andReturn：最后返回相应的MvcResult->Response
-
-```java
 @RunWith(SpringRunner.class)  //底层用junit  SpringJUnit4ClassRunner
 @SpringBootTest(classes = {HttpApplication.class}) //启动整个springboot工程
 @AutoConfigureMockMvc
 public class MockMvcTestDemo {
-
+​
    @Autowired
    private MockMvc mockMvc;
-
+​
    @Test
    public void apiTest() throws Exception {
       MvcResult mvcResult = 
@@ -879,77 +714,60 @@ public class MockMvcTestDemo {
       int status = mvcResult.getResponse().getStatus();
       System.out.println(status);
    }
-
+​
 }
-```
-
-## banner
-
+banner
 自定义banner
 
 application.properties
 
-```
+
 spring.banner.location=banner.txt
-```
+全局异常处理
 
-
-
-## 全局异常处理
-
-```java
 @ControllerAdvice/@RestControllerAdvice//类注解
-
+​
 @ExceptionHandler(value=Exception.class)//方法注解
     
 @ExceptionHandler(value=CustomException.class)//自定义异常
     
 //可以配置页面
 //可以返回json
-```
+部署方式
+jar
 
-## 部署方式
-
-### jar
-
-```java
 <build>
-	<plugins>
-		<plugin>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-maven-plugin</artifactId>
-		</plugin>
+    <plugins>
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+        </plugin>
     </plugins>
 </build>
-```
 
-```java
 如果没有加，则执行jar包 ，报错如下
-	java -jar spring-boot-demo-0.0.1-SNAPSHOT.jar
-	no main manifest attribute, in spring-boot-demo-0.0.1-SNAPSHOT.jar
-	如果有安装maven 用 mvn spring-boot:run
-	项目结构
-		example.jar
-				 |
-				 +-META-INF
-				 |  +-MANIFEST.MF
-				 +-org
-				 |  +-springframework
-				 |     +-boot
-				 |        +-loader
-				 |           +-<spring boot loader classes>
-				 +-BOOT-INF
-				    +-classes
-				    |  +-mycompany
-				    |     +-project
-				    |        +-YourClasses.class
-				    +-lib
-				       +-dependency1.jar
-				       +-dependency2.jar
-```
-
-### war
-
+    java -jar spring-boot-demo-0.0.1-SNAPSHOT.jar
+    no main manifest attribute, in spring-boot-demo-0.0.1-SNAPSHOT.jar
+    如果有安装maven 用 mvn spring-boot:run
+    项目结构
+        example.jar
+                 |
+                 +-META-INF
+                 |  +-MANIFEST.MF
+                 +-org
+                 |  +-springframework
+                 |     +-boot
+                 |        +-loader
+                 |           +-<spring boot loader classes>
+                 +-BOOT-INF
+                    +-classes
+                    |  +-mycompany
+                    |     +-project
+                    |        +-YourClasses.class
+                    +-lib
+                       +-dependency1.jar
+                       +-dependency2.jar
+war
 见《2 SpringBoot-war包.md》
 
 测试知识
@@ -958,31 +776,22 @@ Jmter QPS TPS RT
 
 链接：https://examples.javacodegeeks.com/enterprise-java/spring/tomcat-vs-jetty-vs-undertow-comparison-of-spring-boot-embedded-servlet-containers/
 
-
-
-## Filter
-
-# 其他知识
-
+Filter
+其他知识
 stopWacth
 
-## HTTP请求配置讲解
+HTTP请求配置讲解
 
-```
-    1、@RestController and @RequestMapping是springMVC的注解，不是springboot特有的	
-	2、@RestController = @Controller+@ResponseBody	
-	3、@SpringBootApplication = @Configuration+@EnableAutoConfiguration+@ComponentScan
-```
-
+    1、@RestController and @RequestMapping是springMVC的注解，不是springboot特有的  
+    2、@RestController = @Controller+@ResponseBody   
+    3、@SpringBootApplication = @Configuration+@EnableAutoConfiguration+@ComponentScan
 工具：PostMan
 
-### Get请求
-
-#### @PathVariable 
-
+Get请求
+@PathVariable 
 获取路径：path = "/{id}" 中的参数；@PathVariable String id
 
-```java
+
     /**
      * localhost:8080/getController/100/200
      * 说明
@@ -1002,32 +811,22 @@ stopWacth
         System.out.println(hashMap);
         return hashMap;
     }
-```
-
-#### @RequestParam
-
+@RequestParam
 获取请求路径上的参数
 
 @RequestParam(defaultValue='默认值"",name="别名",value = "", required="是否必填")
 
-#### @RequestBody
-
+@RequestBody
 需要指定http头为content-type为application/json
 
 1.实体类
 
-#### @RequestHeader
-
-### @PostMapping
-
-### @PutMapping
-
-### @DeleteMapping
-
-## Json
-
-### jackson
-
+@RequestHeader
+@PostMapping
+@PutMapping
+@DeleteMapping
+Json
+jackson
 1、常用框架 阿里 fastjson,谷歌gson等
 		JavaBean序列化为Json，性能：Jackson > FastJson > Gson > Json-lib 同个结构
 		Jackson、FastJson、Gson类库各有优点，各有自己的专长
@@ -1039,87 +838,78 @@ stopWacth
 	空字段不返回：@JsonInclude(Include.NON_NUll)
 	指定别名：@JsonProperty
 
-
-
-## SpringBoot2.x目录文件结构讲解
-
+SpringBoot2.x目录文件结构讲解
  简介：讲解SpringBoot目录文件结构和官方推荐的目录规范
 
-```
+
  1、目录讲解
-	 src/main/java：存放代码
-	 src/main/resources
-	 	static: 存放静态文件，比如 css、js、image, （访问方式 http://localhost:8080/js/main.js）
-	 	templates:存放静态页面jsp,html,tpl
-	 	config:存放配置文件,application.properties
-	 	resources:
-
+     src/main/java：存放代码
+     src/main/resources
+        static: 存放静态文件，比如 css、js、image, （访问方式 http://localhost:8080/js/main.js）
+        templates:存放静态页面jsp,html,tpl
+        config:存放配置文件,application.properties
+        resources:
+​
  2、引入依赖 Thymeleaf
- 	<dependency>
-	   <groupId>org.springframework.boot</groupId>
-	   <artifactId>spring-boot-starter-thymeleaf</artifactId>
-	</dependency>
-	注意：如果不引人这个依赖包，html文件应该放在默认加载文件夹里面，
-	比如resources、static、public这个几个文件夹，才可以访问
-
+    <dependency>
+       <groupId>org.springframework.boot</groupId>
+       <artifactId>spring-boot-starter-thymeleaf</artifactId>
+    </dependency>
+    注意：如果不引人这个依赖包，html文件应该放在默认加载文件夹里面，
+    比如resources、static、public这个几个文件夹，才可以访问
+​
  3、同个文件的加载顺序,静态资源文件
  Spring Boot 默认会挨个从
  META/resources > resources > static > public  里面找是否存在相应的资源，如果有则直接返回。
-
- 4、默认配置	
- 	1）官网地址：https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-developing-web-applications.html#boot-features-spring-mvc-static-content
-
- 	2）spring.resources.static-locations = classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/ 
-
+​
+ 4、默认配置 
+    1）官网地址：https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-developing-web-applications.html#boot-features-spring-mvc-static-content
+​
+    2）spring.resources.static-locations = classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/ 
+​
  5、静态资源文件存储在CDN
-```
-
 ### 
 
-## 文件上传
+文件上传
+SpringBoot2.x文件上传实战
 
-### SpringBoot2.x文件上传实战
+简介：讲解HTML页面文件上传和后端处理实战
+    1、讲解springboot文件上传 MultipartFile file，源自SpringMVC
+​
+    1）静态页面直接访问：localhost:8080/index.html
+        注意点：
+            如果想要直接访问html页面，则需要把html放在springboot默认加载的文件夹下面
+    2）MultipartFile 对象的transferTo方法，用于文件保存（效率和操作比原先用FileOutStream方便和高效）
+    
+    访问路径 http://localhost:8080/images/39020dbb-9253-41b9-8ff9-403309ff3f19.jpeg
 
-​	简介：讲解HTML页面文件上传和后端处理实战
-​		1、讲解springboot文件上传 MultipartFile file，源自SpringMVC
-
-​		1）静态页面直接访问：localhost:8080/index.html
-​			注意点：
-​				如果想要直接访问html页面，则需要把html放在springboot默认加载的文件夹下面
-​		2）MultipartFile 对象的transferTo方法，用于文件保存（效率和操作比原先用FileOutStream方便和高效）
-​		
-​		访问路径 http://localhost:8080/images/39020dbb-9253-41b9-8ff9-403309ff3f19.jpeg
-
-
-
-```java
 @RequestMapping(value = "upload")
 @ResponseBody
 public JsonData upload(@RequestParam("head_img") MultipartFile file, HttpServletRequest request) {
-
+​
     //file.isEmpty(); 判断图片是否为空
     //file.getSize(); 图片大小进行判断
-
+​
     String name = request.getParameter("name");
     System.out.println("用户名："+name);
-
+​
     // 获取文件名
     String fileName = file.getOriginalFilename();
     System.out.println("上传的文件名为：" + fileName);
-
+​
     // 获取文件的后缀名,比如图片的jpeg,png
     String suffixName = fileName.substring(fileName.lastIndexOf("."));
     System.out.println("上传的后缀名为：" + suffixName);
-
+​
     // 文件上传后的路径
     fileName = UUID.randomUUID() + suffixName;
     System.out.println("转换后的名称:"+fileName);
-
+​
     File dest = new File(filePath + fileName);
-
+​
     try {
         file.transferTo(dest);
-
+​
         return new JsonData(0, fileName);
     } catch (IllegalStateException e) {
         e.printStackTrace();
@@ -1127,13 +917,9 @@ public JsonData upload(@RequestParam("head_img") MultipartFile file, HttpServlet
         e.printStackTrace();
     }
     return  new JsonData(-1, "fail to save ", null);
-```
+优化
+单个文件
 
-### 优化
-
-#### 单个文件
-
-```
 @Bean
 public MultipartConfigElement multipartConfigElement() {
     MultipartConfigFactory factory = new MultipartConfigFactory();
@@ -1143,77 +929,52 @@ public MultipartConfigElement multipartConfigElement() {
     factory.setMaxRequestSize("1024000KB");
     return factory.createMultipartConfig();
 }
-```
-
-#### maven插件
-
+maven插件
 如果没加相关依赖，执行maven打包，运行后会报错:no main manifest attribute, in XXX.jar
 
-#### 测试上传
-
+测试上传
 文件上传和访问需要指定磁盘路径
 application.properties中增加下面配置
 			1) web.images-path=/Users/jack/Desktop
 			2) spring.resources.static-locations=classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,classpath:/test/,file:${web.upload-path}
 
-#### 文件服务器
-
+文件服务器
 fastdfs，阿里云oss，nginx搭建一个简单的文件服务器
 
-
-
-
-
-
-
-
-
-
-
-
-
-# 大纲 start
-
+大纲 start
 ## 
 
-## 核心问题
-
+核心问题
 ### 
 
-### 组件自动装配
-
+组件自动装配
 模式注解 @Enable模块 条件装配 加载机制
 
 ### 
 
-### 外部化配置
-
+外部化配置
 environment抽象 生命周期 破坏性变更
 
 ### 
 
-### 嵌入式容器
-
+嵌入式容器
 Servlet Web容器
 
 Reactive Web容器
 
 ### 
 
-### Spring Boot Starter
-
+Spring Boot Starter
 依赖管理 装配条件 装配顺序
 
 ### 
 
-### Production-Ready
-
+Production-Ready
 健康检查 数据指标 @Endpoint管控
 
 # 
 
-# 思路
-
+思路
 Web Servlet JSR-315 JSR-340
 
 SQL JDBC JSR-221
@@ -1230,88 +991,69 @@ Java 管理 JMX JSR3
 
 # 
 
-# 三大特性
-
+三大特性
 ## 
 
-## 组件自动装配
-
+组件自动装配
 Web MVC Web Flux  JDBC
 
-```java
+
 @EnableAutoConfiguration
-
+​
 /META-INF/spring.factories
-
+​
 XXXAutoConfiguration
-```
-
 ## 
 
-## 嵌入式容器
-
-
-
+嵌入式容器
 Web server tomcat jetty undertow
 
 Web reactive netty web server
 
 ## 
 
-## 生产准备特性
-
+生产准备特性
 指标 /actuator/metrics
 
 健康检查 /actuator/health
 
 外部化配置 /actuator/configprops 
 
-### 传统Servlet应用
-
-#### Servlet 组件 
-
-##### Servlet注解
-
+传统Servlet应用
+Servlet 组件 
+Servlet注解
 servlet
 
 Filter
 
 Listener
 
-##### SpringBean
-
+SpringBean
 servlet
 
 Filter
 
 Listener
 
-##### RegistrationBean
-
-
-
-#### 异步非阻塞 
-
+RegistrationBean
+异步非阻塞 
 异步Servlet 
 
 非阻塞Servlet
 
 # 
 
-# SpringMVC
-
+SpringMVC
 ## 
 
-## webmvc视图
-
+webmvc视图
 ViewResolver
 
 View
 
 ### 
 
-### 模版引擎
-
+模版引擎
 Thymeleaf
 
 Freemarker
@@ -1320,8 +1062,7 @@ JSP
 
 ### 
 
-### 内容协商
-
+内容协商
 ContenNegotiationConfigurer
 
 ContenNegotiationStrategy
@@ -1330,22 +1071,19 @@ ContenNegotiationViewResolver
 
 ### 
 
-### 异常处理
-
+异常处理
 @ExceptionHandler
 
 HandlerExceptionResolver
 
-​	ExceptionHandlerExceptionResolver
 
+ExceptionHandlerExceptionResolver
 BasicErrorController(springboot)
 
 ## 
 
-## REST
-
-### 资源服务
-
+REST
+资源服务
 注解
 
 @REquestMapping
@@ -1356,173 +1094,130 @@ BasicErrorController(springboot)
 
 @RequestBody
 
+资源跨域
+传统方案
 
-
-### 资源跨域
-
-#### 传统方案
-
-​	iframe
-
-​	jsonp
-
-#### 建议采用
-
+iframe
+​
+jsonp
+建议采用
 @CrossOrigin
 
 WebMvcConfigurer#addCorsMappings
 
-
-
-#### 服务发现
-
+服务发现
 HateOS (Mapped)
 
 ## 
 
-## 核心
-
+核心
 ## 
 
-## 核心架构
-
+核心架构
 ## 
 
-## 处理流程
-
+处理流程
 ## 
 
-## 核心组件
+核心组件
 
-```java
 DispatcherServlet
 HandlerMapping
 HandlerAdapter
 ViewResolver
-```
-
 # 
 
-# Spring Web Flux
-
+Spring Web Flux
 ## 
 
-## Reactor基础
-
-### Java lambda、 
-
-### mono
-
-### flux
-
+Reactor基础
+Java lambda、 
+mono
+flux
 ## 
 
-## 核心
-
+核心
 ### 
 
-### mvc注解
-
+mvc注解
 ### 
 
-### 函数式声明
-
+函数式声明
 RouterFunction
 
 ### 
 
-### 异步非阻塞
-
+异步非阻塞
 Servlet3.1
 
 Net Reactor
 
 ### 
 
-### 场景
-
+场景
 页面渲染
 
 REST应用
 
 # 
 
-# Web server应用
-
+Web server应用
 1.切换web server(tomcat->jetty->undow)
 
 2.web->webflux
 
-```xml
+
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-webflux</artifactId>
 </dependency>
-```
-
 自定义 servlet web server
 
-```
+
 WebServerFactoryCustomizer
 ServletWebServerFactoryCustomizer
-```
-
 自定义 Reactive web server
 
-```
-ReactiveWebServerFactoryCustomizer
-```
 
+ReactiveWebServerFactoryCustomizer
 # 
 
-# 数据相关
-
+数据相关
 ## 
 
-## 关系型
-
+关系型
 ### 
 
-### jdbc
+jdbc
 
-```
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-jdbc</artifactId>
 </dependency>
-```
-
 ### 
 
-#### 数据源 
-
+数据源 
 java.sql.DataSource
 
 ### 
 
-#### JdbcTemplate
-
+JdbcTemplate
 ### 
 
-##### 自动装配
-
+自动装配
 DataSourceAutoConfiguration
 
 ## 
 
-### JPA
+JPA
 
-```
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jdbc</artifactId>
 </dependency>
-```
-
 ### 
 
-#### 实体映射关系
-
+实体映射关系
 @javax.persistence.OneToOne
 
 @javax.persistence.OneToMany
@@ -1533,145 +1228,91 @@ DataSourceAutoConfiguration
 
 ### 
 
-#### 实体操作
-
+实体操作
 java.persistence.Entitymanager
 
 ### 
 
-#### 自动装配
-
+自动装配
 hibernateJpaAutoConfiguration
 
 ## 
 
-### 事务
+事务
 
-```
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-tx</artifactId>
 </dependency>
-```
-
 ### 
 
-#### Spring事务抽象
+Spring事务抽象
 
-```
 PlatformTransactionManager
-```
-
 ### 
 
-#### JDBC事务处理
+JDBC事务处理
 
-```
 DataSourceTransactionManager
-```
-
 ### 
 
-#### 自动装配
+自动装配
+Springboot
+SpringApplication
+失败分析
 
-
-
-# Springboot
-
-## SpringApplication
-
-### 失败分析
-
-```java
 FailureAnalysisReporter
-```
-
-### 应用特性
-
+应用特性
 SpringApplication Fluent API
 
-### 事件监听
-
-## 配置
-
-### 外部化配置
-
+事件监听
+配置
+外部化配置
 ConfigurationProperty
 
-### @Profile
-
-### 配置属性
-
+@Profile
+配置属性
 PropertySources
 
-## Starter
-
-### 开发
-
-### 实践
-
-# 运维管理
-
-## Spring Boot Actuator
-
-### 端点
-
-#### Web Endpoints
-
-#### JMX Endpoints
-
-## 健康检查
-
-### Health
-
-### healthIndicator
-
-## 指标
-
-### 内建 Metrics
-
-### 自定义 Metrics
-
-# 大纲 end
-
-
-
-
-
-# 自动装配
-
-## Spring Framework 手动装配
-
-### 模式注解
-
+Starter
+开发
+实践
+运维管理
+Spring Boot Actuator
+端点
+Web Endpoints
+JMX Endpoints
+健康检查
+Health
+healthIndicator
+指标
+内建 Metrics
+自定义 Metrics
+大纲 end
+自动装配
+Spring Framework 手动装配
+模式注解
 https://github.com/spring-projects/spring-framework/wiki/Spring-Annotation-Programming-Model
 
 @Component 2.5
 
-​	@Service 2.5
 
-​	@Respository 2.0
-
-​	@Controller 2.5
-
+@Service 2.5
+​
+@Respository 2.0
+​
+@Controller 2.5
 @Configuration 3.0
 
-#### 装配
-
-<context:component-scan>
+装配
+context:component-scan
 
 @ComponentScan
 
-
-
-#### 原理
-
-##### 派生性
-
-##### 层次性
-
-### @Enable模块装配
-
+原理
+派生性
+层次性
+@Enable模块装配
 3.1
 
 @EnableWebMvc  
@@ -1688,8 +1329,6 @@ https://github.com/spring-projects/spring-framework/wiki/Spring-Annotation-Progr
 
 @EnableAspectJAutoProxy AspectJ代理模块
 
-
-
 @EnableAutoCOnfiguration
 
 @EnableManagementContext
@@ -1697,8 +1336,6 @@ https://github.com/spring-projects/spring-framework/wiki/Spring-Annotation-Progr
 @EnableConfigurationProperties
 
 @EnableAuto2Sso
-
-
 
 @EnableEurekaServer
 
@@ -1710,74 +1347,58 @@ https://github.com/spring-projects/spring-framework/wiki/Spring-Annotation-Progr
 
 @EnableCiruitBreaker
 
-#### 原理
+原理
+注解驱动
 
-##### 注解驱动
-
-```java
 @xxx
 @xxx
 @Import(DelegatingWebMvcConfiguration.class)
 public @interface EnableWebMvc{
   
 }
-
-
+​
+​
 @Configuration
 public class DelegatingWebMvcConfiguration extends WebMvcConfigurationSupport{
   //...
 }
-```
+接口编程
 
-
-
-##### 接口编程
-
-```java
 @xxx
 ...
 @Import(CachingConfigurationSelector.class) 
 public @interface EnableCaching{
   
 } 
-
-
+​
+​
 public class CachingConfigurationSelector extend AdviceModeImportSelector<EnableCaching>{
   // ...
   public String[] selectImports(AdviceMode adviceMode){
     //...
   }
 }
-```
-
-## 条件装配
-
-### 注解编程
-
-#### 基于配置方式
-
+条件装配
+注解编程
+基于配置方式
 @Profile 
 
 配置化条件装配
 
 3.1
 
-#### 基于编程方式
+基于编程方式
 
-​	@ConditionalOnSystemProperty
-
+@ConditionalOnSystemProperty
 @Conditional
 
 编程条件装配
 
 4.0
 
-### 编程方式
-
-# SpringBoot 自动装配
-
-## 模式注解
-
+编程方式
+SpringBoot 自动装配
+模式注解
 @Enable模块
 
 条件装配
@@ -1798,91 +1419,55 @@ xxxAutoConfiguration
 
 META-INF/spring.factories
 
-
-
-
-
-
-
-
-
-# 外部化配置
-
+外部化配置
 XMLBean占位符
 
 @Value
 
 Environment
 
-
-
 @ConfigurationProperties
-
-
 
 @ConditionalOnProperty
 
-
-
 整合Mybatis
 
-```
+
 <build>
-	<plugins>
-		<plugin>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-maven-plugin</artifactId>
-		</plugin>
-	</plugins>
+    <plugins>
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+        </plugin>
+    </plugins>
 </build>
-```
-
-
-
-# 未
-
-
-
+未
 # 
 
-
-
-# 未整合资源（暂时不需要）
-
-
-
-## Spring Boot CLI
-
+未整合资源（暂时不需要）
+Spring Boot CLI
 ### 
 
-### 安装
+安装
 
-```
 用下载的分发包进行安装
 用Groovy Environment Manager进行安装。
 通过OS X Homebrew进行安装。
 使用MacPorts进行安装
-```
-
-
-
-## 自动配置
-
+自动配置
 ### 
 
-### @Conditional
-
-Spring4推出了专注于功能开发，继@Conditional注解后，又基于此注解推出了很多派生注解，比如@ConditionalOnBean、@ConditionalOnMissingBean、@ConditionalOnExpression、@ConditionalOnClass......动态注入bean变得更方便了 原文：<https://blog.csdn.net/xcy1193068639/article/details/81517456>
+@Conditional
+Spring4推出了专注于功能开发，继@Conditional注解后，又基于此注解推出了很多派生注解，比如@ConditionalOnBean、@ConditionalOnMissingBean、@ConditionalOnExpression、@ConditionalOnClass......动态注入bean变得更方便了 原文：https://blog.csdn.net/xcy1193068639/article/details/81517456
 
 ## 
 
-## 覆盖自动配置
-
+覆盖自动配置
 有点疑问
 
 属性文件配置
 
-```
+
 (1) 命令行参数
 (2) java:comp/env里的JNDI属性
 (3) JVM系统属性
@@ -1900,21 +1485,19 @@ application.properties和application.yml文件能放在以下四个位置。
 (2) 外置，在应用程序运行的目录里。
 (3) 内置，在config包内。
 (4) 内置，在Classpath根目录
-
+​
 同样，这个列表按照优先级排序。也就是说，/config子目录里的application.properties会覆盖
 应用程序Classpath里的application.properties中的相同属性。
 此外，如果你在同一优先级位置同时有application.properties和application.yml，那么application. 
 yml里的属性会覆盖application.properties里的属性。
 禁用ascii-art Banner只是使用属性的一个小例子。让我们再看几个例子，看看如何通过常用
 途径微调自动配置的Bean。
-```
-
 例如：禁用模板缓存
 
-```
+
 1.$ java -jar readinglist-0.0.1-SNAPSHOT.jar --spring.thymeleaf.cache=false 
   $ java -jar readinglist-0.0.1-SNAPSHOT.jar --server.port=8000
-
+​
 2.spring: 
  thymeleaf: 
  cache: false
@@ -1923,22 +1506,20 @@ yml里的属性会覆盖application.properties里的属性。
  port: 8000 
  
 3.$ export spring_thymeleaf_cache=false 
-
+​
  spring.freemarker.cache（Freemarker）
  spring.groovy.template.cache（Groovy模板）
  spring.velocity.cache（Velocity）
-```
-
-### Bean 的配置外置
-
+Bean 的配置外置
 外部配置相关属性（通常是自定义的）
 
-```
+
 直接从外部配置文件引入
 @ConfigurationProperties(prefix="xxx")
-
+​
 一个类里面 将该类定义为一个Bean 方便引用
 @ConfigurationProperties("amazon") #注入带amazon 前缀的属性
-```
+其他
 
-
+ # 依赖分析
+ mvn dependency:tree
