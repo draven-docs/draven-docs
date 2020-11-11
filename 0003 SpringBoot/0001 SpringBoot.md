@@ -183,6 +183,8 @@ called thirdpartyproject would typically be named thirdpartyproject-spring-boot-
 
 # 配置文件
 
+You can use properties files, YAML files, environment variables, and command-line arguments to externalize configuration
+
 xml,properties,json,yaml
 
 ### application.yml
@@ -294,12 +296,12 @@ spring.devtools.restart.trigger-file=trigger.txt
 
  	注意点：生产环境不要开启这个功能，如果用java -jar启动，springBoot是不会进行热部署的
 
-## 读取配置文件
+# 配置文件
 
 注入bean的方式，属性名称和配置文件里面的key一一对应，就用加@Value 这个注解
 如果不一样，就要加@value("${XXX}")
 
-### Environment
+## Environment
 
 ```java
 @RestController
@@ -313,6 +315,17 @@ public class HelloWorldController {
 	return "Hello world!";
 	}
 }
+```
+
+## 4.2.1 Configuring Random Values
+
+```properties
+my.secret=${random.value}
+my.number=${random.int}
+my.bignumber=${random.long} 
+my.uuid=${random.uuid}
+my.number.less.than.ten=${random.int(10)} 
+my.number.in.range=${random.int[1024,65536]}
 ```
 
 ### @Value
@@ -332,6 +345,86 @@ public class HelloWorldController {
 	}
 }
 ```
+
+## 4.2.2 Accessing Command Line Properties
+
+```java
+//--server.port=9000
+//禁用
+SpringApplication.setAddCommandLineProperties(false);
+```
+
+## 4.2.3 Application Property Files
+
+```java
+// 源码解读
+org.springframework.boot.context.config.ConfigFileApplicationListener
+```
+
+说明
+
+```properties
+1. A /config subdirectory of the current directory 
+2. The current directory
+3. A classpath /config package
+4. The classpath root
+```
+
+配置
+
+```properties
+# redis.properties
+redis.name=redisName
+server.port=30002
+my.secret=${random.value}
+```
+
+命令行
+
+```shell
+# 逗号分隔可指定多个
+# spring.config.name 修改默认配置文件名称
+# spring.config.location 指定配置文件位置 也可存放于系统指定位置
+  #  file:/config/*
+  #  classpath:/config
+# /config/redis.properties，/config/default.properties
+java -jar noxus-draven-externalized-configuration-0.0.1-SNAPSHOT.jar --spring.config.name=redis --spring.config.location=classpath:/config/redis.properties
+```
+
+## 4.2.4 Profile-specific Properties
+
+多环境配置
+
+```shell
+# 格式
+application-{profile}.properties
+# 默认值 application-default.properties
+No active profile set, falling back to default profiles: default
+
+# 配置 spring.profiles.active
+```
+
+## 4.2.5. Placeholders in Properties
+
+```properties
+app.name=MyApp
+# 从当前existing Environment获取信息
+app.description=${app.name} is a Spring Boot application
+```
+
+## 4.2.6. Encrypting Properties
+
+
+
+
+
+## 4.2.7. Using YAML Instead of Properties
+
+```yaml
+# 一种文件格式 类似json等 掌握语法即可
+```
+
+
 
 ### 配置文件加载
 
@@ -405,6 +498,11 @@ public class HelloWorldController {
 
 #### 实体类配置文件
 
+
+
+	说明：
+		1、@PropertySource导入配置文件
+		2、可以直接从application.properties中获取
 	步骤：
 		1、添加 @Component 注解；
 		2、使用 @PropertySource 注解指定配置文件位置；
@@ -413,6 +511,8 @@ public class HelloWorldController {
 		4、必须 通过注入IOC对象Resource 进来 ， 才能在类中使用获取的配置文件值。
 			@Autowired
 			private ServerSettings serverSettings;
+
+@ConfigurationProperties
 
 ##### 无前缀
 
@@ -438,6 +538,47 @@ public class ServerConstant {
 }
 ```
 
+@EnableConfigurationProperties+@ConfigurationProperties
+
+```java
+// 第一步
+// 若找不到EnableConfigurationProperties 则会报错
+@ConfigurationProperties("enabled")
+public class EnabledProperties {
+    private String username;
+    private String password;
+}
+
+// 第二步
+@Configuration(proxyBeanMethods = false)
+// 需要被扫描到
+@EnableConfigurationProperties(EnabledProperties.class)
+public class EnabledPropertiesConfiguration {
+
+    private final EnabledProperties enabledProperties;
+
+    public EnabledPropertiesConfiguration(EnabledProperties enabledProperties) {
+        this.enabledProperties = enabledProperties;
+    }
+
+    @Bean
+    public EnabledUser getUser() {
+        EnabledUser enabledUser = new EnabledUser();
+        enabledUser.setPassword(enabledProperties.getPassword());
+        enabledUser.setUsername(enabledProperties.getUsername());
+        return enabledUser;
+    }
+
+}
+
+
+// 引入使用
+private final EnabledProperties enabledProperties;
+
+```
+
+
+
 ### 常见问题：
 
 			1、配置文件注入失败，Could not resolve placeholder
@@ -454,7 +595,15 @@ public class ServerConstant {
 
 方便多环境切换
 
-格式：{application-{profile}.yml}
+```yaml
+# 格式：
+# {application-{profile}.yml}
+
+org.springframework.boot.SpringApplication#logStartupProfileInfo
+
+```
+
+
 
 ```yml
 # application.yml
@@ -481,6 +630,70 @@ test:
 # application-pro.yml
 test: 
  url: application-pro
+```
+
+## Json
+
+### jackson
+
+1、常用框架 阿里 fastjson,谷歌gson等
+		JavaBean序列化为Json，性能：Jackson > FastJson > Gson > Json-lib 同个结构
+		Jackson、FastJson、Gson类库各有优点，各有自己的专长
+		空间换时间，时间换空间
+
+2、jackson处理相关自动
+	指定字段不返回：@JsonIgnore
+	指定日期格式：@JsonFormat(pattern="yyyy-MM-dd hh:mm:ss",locale="zh",timezone="GMT+8")
+	空字段不返回：@JsonInclude(Include.NON_NUll)
+	指定别名：@JsonProperty
+
+
+
+## Gjson（待定）
+
+```xml
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-webflux</artifactId>
+  <exclusions>
+    <exclusion>
+      <artifactId>jackson-databind</artifactId>
+    </exclusion>
+  </exclusions>
+</dependency>
+<dependency>
+  <groupId>com.google.code.gson</groupId>
+  <artifactId>gson</artifactId>
+</dependency>
+```
+
+## JSON-B
+
+```http
+http://www.1024sky.cn/blog/article/66
+```
+
+## 优雅停机
+
+ Graceful shutdown
+
+```yaml
+server:
+ shutdown: graceful
+spring:
+ lifecycle:
+  timeout-per-shutdown-phase: 20s
+```
+
+
+
+## Readiness和Liveness
+
+```yaml
+management:
+ health:
+  probes:
+   enabled: true
 ```
 
 ## 整合web模板
@@ -1065,20 +1278,7 @@ stopWacth
 
 ### @DeleteMapping
 
-## Json
 
-### jackson
-
-1、常用框架 阿里 fastjson,谷歌gson等
-		JavaBean序列化为Json，性能：Jackson > FastJson > Gson > Json-lib 同个结构
-		Jackson、FastJson、Gson类库各有优点，各有自己的专长
-		空间换时间，时间换空间
-
-2、jackson处理相关自动
-	指定字段不返回：@JsonIgnore
-	指定日期格式：@JsonFormat(pattern="yyyy-MM-dd hh:mm:ss",locale="zh",timezone="GMT+8")
-	空字段不返回：@JsonInclude(Include.NON_NUll)
-	指定别名：@JsonProperty
 
 
 
@@ -1653,9 +1853,29 @@ PropertySources
 
 # 运维管理
 
-## Spring Boot Actuator
+# Spring Boot Actuator
 
-### 端点
+```xml
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+```
+
+## Endpoints
+
+端点
+
+```properties
+# 启用端点
+management.endpoint.shutdown.enabled=true
+management.endpoints.enabled-by-default=false
+management.endpoint.info.enabled=true
+# 端点开启与否排除 
+# include and exclude
+```
+
+
 
 #### Web Endpoints
 
@@ -1884,7 +2104,43 @@ Environment
 
 
 
-# 
+# # 
+
+# NoSQL
+
+Repositories
+
+## Redis
+
+## MongoDB
+
+## Neo4j
+
+## Solr(暂不考虑)
+
+## Elasticsearch
+
+## Cassandra
+
+## Couchbase
+
+## LDAP
+
+## influxDB
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
