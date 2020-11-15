@@ -267,3 +267,99 @@ mysql> set global innodb_print_ddl_logs=1;
 mysql> create table t1(c int) engine=innodb;
 
 ![](imagesMysql8.0/MySql2.png)
+
+
+
+
+
+
+
+# 安装配置
+
+## 解压包安装
+
+```mysql
+mysqld --verbose --help
+
+
+-- 1.下载压缩包
+	 接搜索对应的版本即可
+-- 2.配置环境变量
+	-- mysqlpath为mysql安装目录
+	export MYSQL_HOME=/mysqlpath
+	export PATH=$PATH:$MYSQL_HOME/bin
+	-- 测试环境变量是否生效
+	 source .bash_profiles
+-- 3.创建mysql用户(使用root)
+
+-- 4.创建配置文件
+	 -- my.cnf
+-- 5.mysqld --initialize --console
+   -- 请记录该文件目录下生成的密码
+   -- y5vmO*lvOJeS
+ 
+ 
+./mysqld --initialize --console
+2020-11-15T12:21:45.656571Z 0 [System] [MY-013169] [Server] /Users/draven/Documents/java/soft/mysql/mysql8/mysql8/bin/mysqld (mysqld 8.0.22) initializing of server in progress as process 10212
+2020-11-15T12:21:45.703506Z 0 [Warning] [MY-010159] [Server] Setting lower_case_table_names=2 because file system for /Users/draven/Documents/java/soft/mysql/mysql8/mysql8/data/ is case insensitive
+2020-11-15T12:21:45.769340Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2020-11-15T12:21:46.144878Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2020-11-15T12:21:47.019559Z 6 [Note] [MY-010454] [Server] A temporary password is generated for root@localhost: jlFFo1+wdij7
+2020-11-15T12:21:47.911287Z 0 [System] [MY-013172] [Server] Received SHUTDOWN from user <via user signal>. Shutting down mysqld (Version: 8.0.22).
+
+
+-- ./mysqld
+
+
+Can't connect to local MySQL server through socket '/Users/draven/Documents/java/soft/mysql/mysql8/mysql.sock'
+
+
+-- 卸载 删除当前 data 目录下所有数据
+
+
+-- my.cnf
+
+[mysqld]
+# 设置3306端口
+port=3306
+  
+# 设置mysql的安装目录
+basedir=/Users/draven/Documents/java/soft/mysql/mysql8/mysql8
+  
+# 设置mysql数据库的数据的存放目录
+datadir=/Users/draven/Documents/java/soft/mysql/mysql8/data8
+
+#
+socket=/Users/draven/Documents/java/soft/mysql/mysql8/mysql.sock
+
+#
+user=root
+
+
+# 允许最大连接数
+max_connections=200
+  
+# 允许连接失败的次数。这是为了防止有人从该主机试图攻击数据库系统
+max_connect_errors=10
+  
+# 服务端使用的字符集默认为UTF8
+character-set-server=utf8
+  
+# 创建新表时将使用的默认存储引擎
+default-storage-engine=INNODB
+  
+# 默认使用“mysql_native_password”插件认证
+default_authentication_plugin=mysql_native_password
+  
+[mysql]
+# 设置mysql客户端默认字符集
+default-character-set=utf8
+  
+[client]
+# 设置mysql客户端连接服务端时默认使用的端口
+port=3306
+default-character-set=utf8
+
+socket=/Users/draven/Documents/java/soft/mysql/mysql8/mysql.sock
+```
+
