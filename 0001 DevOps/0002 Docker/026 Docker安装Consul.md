@@ -37,3 +37,12 @@ docker exec -it consul1 consul members
 0101 can not connect to 127.0.0.1:8091 cause:can not register RM,err:can not connect to services-server.
 ```
 
+## 非docker安装
+
+```shell
+# 1.下载安装包
+# 2.解压运行即可
+# 3.启动(熟悉命令行即可)
+./consul agent -dev
+```
+
