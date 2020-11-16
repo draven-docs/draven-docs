@@ -389,7 +389,30 @@ my.secret=${random.value}
   #  classpath:/config
 # /config/redis.properties，/config/default.properties
 java -jar noxus-draven-externalized-configuration-0.0.1-SNAPSHOT.jar --spring.config.name=redis --spring.config.location=classpath:/config/redis.properties
+
+
+
+
+# 2.4新特性配置 --spring.config.use-legacy-processing=true
+java -jar noxus-draven-2.4.x-import-0.0.1-SNAPSHOT.jar --spring.config.name=default --spring.config.on-location-not-found=ignore --spring.config.location=classpath:/default.properties --spring.config.use-legacy-processing=true
 ```
+
+
+
+### Config Data Imports
+
+spring.config.import
+
+#2.4新特性
+
+```properties
+# 默认追加前缀
+spring.config.import = classpath:
+spring.config.import = configtree: 
+spring.config.import = file:
+```
+
+
 
 ## 4.2.4 Profile-specific Properties
 
