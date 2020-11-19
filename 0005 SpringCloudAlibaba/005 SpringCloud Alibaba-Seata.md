@@ -1,44 +1,8 @@
-# Seata
+# Spring Cloud Alibaba-Seata
 
-## 环境搭建
 
-```shell
-# 参考链接
-https://github.com/seata/seata/tree/1.2.0/script
-http://seata.io/zh-cn/docs/overview/what-is-seata.html
-http://seata.io/zh-cn/docs/dev/mode/at-mode.html
 
-# 修改脚本参数
-# 脚本 nacos-config.sh
-# 脚本参数 config.txt
 
-# 数据库
-CREATE SCHEMA `seata` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin ;
-# 参加参数-连接nacos的相关配置
-sh nacos-config.sh -h 127.0.0.1 -p 8849 -g SEATA_GROUP -t 4dad9a92-3a8e-4456-992f-03433d9320ad
-
-# 默认值-localhost 8848 SEATA_GROUP
-sh ${SEATAPATH}/script/config-center/nacos/nacos-config.sh -h 127.0.0.1 -p 8849 -g SEATA_GROUP -t 4dad9a92-3a8e-4456-992f-03433d9320ad
-```
-
-## nacos相关
-
-```shell
-# 采用nacos作为配置中心
-  
-
-```
-
-## seata服务端
-
-```shell
-# 采用nacos作为注册中心
-# 改造服务端
-# 修改registry.conf
-# 修改为配置中心
-# 修改为注册中心
-# 见附录 registry.conf
-```
 
 ## 版本依赖
 
@@ -88,8 +52,6 @@ seata:
       password: "nacos"
 ```
 
-
-
 # 工作模式
 
 ## AT
@@ -98,260 +60,197 @@ seata:
 
 ## Saga
 
+# 环境搭建
+
+```shell
+# 参考链接
+# 主页
+https://github.com/seata/seata
+https://github.com/seata/seata/tree/1.4.0
+https://github.com/seata/seata/tree/1.4.0/script
+https://github.com/seata/seata/tree/1.4.0/script/config-center
+http://seata.io/zh-cn/docs/overview/what-is-seata.html
+http://seata.io/zh-cn/docs/dev/mode/at-mode.html
+http://seata.io/zh-cn/docs/ops/deploy-guide-beginner.html
+```
+
+
+
+```shell
+# 说明
+# 见 registry.conf
+# https://github.com/seata/seata/tree/1.4.0/script/config-center
+# store.mode
+# 支持 file、nacos 、apollo、zk、consul、etcd3、custom
+# 本次安装以 nacos 作为 注册中心与配置中心
+# seata-nacos
+```
+
+## 注册中心
+
+### Nacos
+
+application.properties
+
+```shell
+# 启动nacos服务 并 选择合适的数据持久化（mysql）
+# 新建namespace : seata-group
+# 开启auth验证
+# 端口地址正确一致
+```
+
+
+
+### Seata
+
+registry.conf
+
+```shell
+# 本次只摘录修改部分
+registry {
+  # file 、nacos 、eureka、redis、zk、consul、etcd3、sofa
+  # 修改为nacos
+  type = "nacos"
+  loadBalance = "RandomLoadBalance"
+  loadBalanceVirtualNodes = 10
+
+  nacos {
+  	# 服务端应用名称 注册到nacos服务名 用于服务发现
+    application = "seata-server"
+    # 指定nacos的连接地址
+    serverAddr = "127.0.0.1:8848"
+    # 指定注册到nacos分组 默认值
+    group = "SEATA_GROUP"
+    # 指定注册到那个namespace中 修改为 seata-group
+    namespace = "seata-group"
+    cluster = "default"
+    # since nacos1.2 支持验证，若nacos开启验证，此处必须指定 修改为nacos nacos
+    username = "nacos"
+    password = "nacos"
+  }
+}
+```
+
+
+
+## 配置中心
+
+### Nacos
+
+```shell
+# 环境准备
+# 可执行脚本
+# 配置文件
+# 数据库脚本
+
+
+# 参数配置 
+# 参考资料 https://github.com/seata/seata/tree/1.4.0/script/config-center  
+# 配置信息 config.txt
+
+# 本次只摘录修改部分
+# 指定数据库存储
+store.mode=db
+
+store.db.dbType=mysql
+# mysql-connector-java-8.0.15.jar
+# 默认不支持需要将此驱动复制 seata/lib/目录下 并修改 驱动
+store.db.driverClassName=com.mysql.cj.jdbc.Driver
+
+# 支持 mysql-connector-java-8.0.15.jar连接
+store.db.url=jdbc:mysql://127.0.0.1:3306/seata?characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&allowMultiQueries=true&allowPublicKeyRetrieval=true
+
+# 数据库账户/密码 请自行修改
+store.db.user=username
+store.db.password=password
+
+
+
+# 执行脚本
+# 参考资料 https://github.com/seata/seata/tree/1.4.0/script/config-center/nacos #
+# 脚本 nacos-config.sh
+# 脚本位置 nacos/bin (本次位置)
+
+# 示例
+# sh ${SEATAPATH}/script/config-center/nacos/nacos-config.sh -h localhost -p 8848 -g SEATA_GROUP -t 5a3c7d6c-f497-4d68-a71a-2e5e3340b3ca -u username -w password
+
+# 执行脚本（注意参数信息 比如ip port group 默认值-localhost 8848 SEATA_GROUP）
+cd nacos
+./nacos-config.sh -h 127.0.0.1 -p 8849 -g SEATA_GROUP -t seata-groups -u nacos -w nacos
+
+
+# 执行脚本找不到文件 请修改文件位置config.txt 或者 脚本nacos-config.sh指定config.txt的位置
+for line in $(cat $(dirname "$PWD")/config.txt | sed s/[[:space:]]//g); do
+  (( count++ ))
+	key=${line%%=*}
+    value=${line#*=}
+	addConfig "${key}" "${value}"
+done
+
+# 数据库准备
+CREATE SCHEMA `seata` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
+# https://github.com/seata/seata/tree/1.4.0/script/server/db
+# mysql
+# 执行SQL语句
+
+```
+
+
+
+### Seata
+
+registry.conf
+
+```shell
+config {
+  # file、nacos 、apollo、zk、consul、etcd3
+  type = "nacos"
+  
+  nacos {
+    # 指定nacos的连接地址
+    serverAddr = "127.0.0.1:8848"
+    # 指定注册到那个namespace中 修改为 seata-group
+    namespace = "seata-group"
+    # 指定注册到nacos分组 默认值
+    group = "SEATA_GROUP"
+    # since nacos1.2 支持验证，若nacos开启验证，此处必须指定 修改为nacos nacos
+    username = "nacos"
+    password = "nacos"
+  }
+}
+```
+
+
+
+### 启动seata
+
+```shell
+# 启动查看日志
+```
+
 
 
 # 附录
 
-## nacos改造
-
-### config.txt
-
-```
-transport.type=TCP
-transport.server=NIO
-transport.heartbeat=true
-transport.enableClientBatchSendRequest=false
-transport.threadFactory.bossThreadPrefix=NettyBoss
-transport.threadFactory.workerThreadPrefix=NettyServerNIOWorker
-transport.threadFactory.serverExecutorThreadPrefix=NettyServerBizHandler
-transport.threadFactory.shareBossWorker=false
-transport.threadFactory.clientSelectorThreadPrefix=NettyClientSelector
-transport.threadFactory.clientSelectorThreadSize=1
-transport.threadFactory.clientWorkerThreadPrefix=NettyClientWorkerThread
-transport.threadFactory.bossThreadSize=1
-transport.threadFactory.workerThreadSize=default
-transport.shutdown.wait=3
-service.vgroupMapping.my_test_tx_group=default
-service.default.grouplist=127.0.0.1:8091
-service.enableDegrade=false
-service.disableGlobalTransaction=false
-client.rm.asyncCommitBufferLimit=10000
-client.rm.lock.retryInterval=10
-client.rm.lock.retryTimes=30
-client.rm.lock.retryPolicyBranchRollbackOnConflict=true
-client.rm.reportRetryCount=5
-client.rm.tableMetaCheckEnable=false
-client.rm.sqlParserType=druid
-client.rm.reportSuccessEnable=false
-client.rm.sagaBranchRegisterEnable=false
-client.tm.commitRetryCount=5
-client.tm.rollbackRetryCount=5
-store.mode=db
-store.file.dir=file_store/data
-store.file.maxBranchSessionSize=16384
-store.file.maxGlobalSessionSize=512
-store.file.fileWriteBufferCacheSize=16384
-store.file.flushDiskMode=async
-store.file.sessionReloadReadSize=100
-store.db.datasource=druid
-store.db.dbType=mysql
-store.db.driverClassName=com.mysql.cj.jdbc.Driver
-store.db.url=jdbc:mysql://127.0.0.1:3306/seata?characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&allowMultiQueries=true&allowPublicKeyRetrieval=true
-store.db.user=root
-store.db.password=12345678
-store.db.minConn=5
-store.db.maxConn=30
-store.db.globalTable=global_table
-store.db.branchTable=branch_table
-store.db.queryLimit=100
-store.db.lockTable=lock_table
-store.db.maxWait=5000
-server.recovery.committingRetryPeriod=1000
-server.recovery.asynCommittingRetryPeriod=1000
-server.recovery.rollbackingRetryPeriod=1000
-server.recovery.timeoutRetryPeriod=1000
-server.maxCommitRetryTimeout=-1
-server.maxRollbackRetryTimeout=-1
-server.rollbackRetryTimeoutUnlockEnable=false
-client.undo.dataValidation=true
-client.undo.logSerialization=jackson
-server.undo.logSaveDays=7
-server.undo.logDeletePeriod=86400000
-client.undo.logTable=undo_log
-client.log.exceptionRate=100
-transport.serialization=seata
-transport.compressor=none
-metrics.enabled=false
-metrics.registryType=compact
-metrics.exporterList=prometheus
-metrics.exporterPrometheusPort=9898
-
-```
-
-
-
-### nacos-config.sh
-
-```shell
-#!/usr/bin/env bash
-# Copyright 1999-2019 Seata.io Group.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at、
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-while getopts ":h:p:g:t:" opt
-do
-  case $opt in
-  h)
-    host=$OPTARG
-    ;;
-  p)
-    port=$OPTARG
-    ;;
-  g)
-    group=$OPTARG
-    ;;
-  t)
-    tenant=$OPTARG
-    ;;
-  ?)
-    echo " USAGE OPTION: $0 [-h host] [-p port] [-g group] [-t tenant] "
-    exit 1
-    ;;
-  esac
-done
-
-if [[ -z ${host} ]]; then
-    host=localhost
-fi
-if [[ -z ${port} ]]; then
-    port=8848
-fi
-if [[ -z ${group} ]]; then
-    group="SEATA_GROUP"
-fi
-if [[ -z ${tenant} ]]; then
-    tenant=""
-fi
-
-nacosAddr=$host:$port
-contentType="content-type:application/json;charset=UTF-8"
-
-echo "set nacosAddr=$nacosAddr"
-echo "set group=$group"
-
-failCount=0
-tempLog=$(mktemp -u)
-function addConfig() {
-  curl -X POST -H "${1}" "http://$2/nacos/v1/cs/configs?dataId=$3&group=$group&content=$4&tenant=$tenant" >"${tempLog}" 2>/dev/null
-  if [[ -z $(cat "${tempLog}") ]]; then
-    echo " Please check the cluster status. "
-    exit 1
-  fi
-  if [[ $(cat "${tempLog}") =~ "true" ]]; then
-    echo "Set $3=$4 successfully "
-  else
-    echo "Set $3=$4 failure "
-    (( failCount++ ))
-  fi
-}
-
-count=0
-for line in $(cat $(dirname "$PWD")/conf/seata/config.txt | sed s/[[:space:]]//g); do
-  (( count++ ))
-	key=${line%%=*}
-  value=${line#*=}
-	addConfig "${contentType}" "${nacosAddr}" "${key}" "${value}"
-done
-
-echo "========================================================================="
-echo " Complete initialization parameters,  total-count:$count ,  failure-count:$failCount "
-echo "========================================================================="
-
-if [[ ${failCount} -eq 0 ]]; then
-	echo " Init nacos config finished, please start seata-server. "
-else
-	echo " init nacos config fail. "
-fi
-```
-
-### 创建table
-
-```mysql
--- -------------------------------- The script used when storeMode is 'db' --------------------------------
--- the table to store GlobalSession data
-CREATE TABLE IF NOT EXISTS `global_table`
-(
-    `xid`                       VARCHAR(128) NOT NULL,
-    `transaction_id`            BIGINT,
-    `status`                    TINYINT      NOT NULL,
-    `application_id`            VARCHAR(32),
-    `transaction_service_group` VARCHAR(32),
-    `transaction_name`          VARCHAR(128),
-    `timeout`                   INT,
-    `begin_time`                BIGINT,
-    `application_data`          VARCHAR(2000),
-    `gmt_create`                DATETIME,
-    `gmt_modified`              DATETIME,
-    PRIMARY KEY (`xid`),
-    KEY `idx_gmt_modified_status` (`gmt_modified`, `status`),
-    KEY `idx_transaction_id` (`transaction_id`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
-
--- the table to store BranchSession data
-CREATE TABLE IF NOT EXISTS `branch_table`
-(
-    `branch_id`         BIGINT       NOT NULL,
-    `xid`               VARCHAR(128) NOT NULL,
-    `transaction_id`    BIGINT,
-    `resource_group_id` VARCHAR(32),
-    `resource_id`       VARCHAR(256),
-    `branch_type`       VARCHAR(8),
-    `status`            TINYINT,
-    `client_id`         VARCHAR(64),
-    `application_data`  VARCHAR(2000),
-    `gmt_create`        DATETIME(6),
-    `gmt_modified`      DATETIME(6),
-    PRIMARY KEY (`branch_id`),
-    KEY `idx_xid` (`xid`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
-
--- the table to store lock data
-CREATE TABLE IF NOT EXISTS `lock_table`
-(
-    `row_key`        VARCHAR(128) NOT NULL,
-    `xid`            VARCHAR(96),
-    `transaction_id` BIGINT,
-    `branch_id`      BIGINT       NOT NULL,
-    `resource_id`    VARCHAR(256),
-    `table_name`     VARCHAR(32),
-    `pk`             VARCHAR(36),
-    `gmt_create`     DATETIME,
-    `gmt_modified`   DATETIME,
-    PRIMARY KEY (`row_key`),
-    KEY `idx_branch_id` (`branch_id`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
-```
-
-## 服务端
+## 参数脚本
 
 ### registry.conf
 
 ```shell
 registry {
   # file 、nacos 、eureka、redis、zk、consul、etcd3、sofa
-  type = "nacos"
+  type = "file"
+  loadBalance = "RandomLoadBalance"
+  loadBalanceVirtualNodes = 10
 
   nacos {
     application = "seata-server"
-    serverAddr = "127.0.0.1:8849"
+    serverAddr = "127.0.0.1:8848"
     group = "SEATA_GROUP"
-    namespace = "4dad9a92-3a8e-4456-992f-03433d9320ad"
+    namespace = ""
     cluster = "default"
-    username = "nacos"
-    password = "nacos"
+    username = ""
+    password = ""
   }
   eureka {
     serviceUrl = "http://localhost:8761/eureka"
@@ -395,18 +294,16 @@ registry {
   }
 }
 
-
-
 config {
   # file、nacos 、apollo、zk、consul、etcd3
-  type = "nacos"
+  type = "file"
 
   nacos {
-    serverAddr = "127.0.0.1:8849"
-    namespace = "4dad9a92-3a8e-4456-992f-03433d9320ad"
+    serverAddr = "127.0.0.1:8848"
+    namespace = ""
     group = "SEATA_GROUP"
-    username = "nacos"
-    password = "nacos"
+    username = ""
+    password = ""
   }
   consul {
     serverAddr = "127.0.0.1:8500"
@@ -415,6 +312,7 @@ config {
     appId = "seata-server"
     apolloMeta = "http://192.168.1.204:8801"
     namespace = "application"
+    apolloAccesskeySecret = ""
   }
   zk {
     serverAddr = "127.0.0.1:2181"
@@ -431,6 +329,197 @@ config {
   }
 }
 
+```
+
+### config.txt
+
+```shell
+transport.type=TCP
+transport.server=NIO
+transport.heartbeat=true
+transport.enableClientBatchSendRequest=false
+transport.threadFactory.bossThreadPrefix=NettyBoss
+transport.threadFactory.workerThreadPrefix=NettyServerNIOWorker
+transport.threadFactory.serverExecutorThreadPrefix=NettyServerBizHandler
+transport.threadFactory.shareBossWorker=false
+transport.threadFactory.clientSelectorThreadPrefix=NettyClientSelector
+transport.threadFactory.clientSelectorThreadSize=1
+transport.threadFactory.clientWorkerThreadPrefix=NettyClientWorkerThread
+transport.threadFactory.bossThreadSize=1
+transport.threadFactory.workerThreadSize=default
+transport.shutdown.wait=3
+service.vgroupMapping.my_test_tx_group=default
+service.default.grouplist=127.0.0.1:8091
+service.enableDegrade=false
+service.disableGlobalTransaction=false
+client.rm.asyncCommitBufferLimit=10000
+client.rm.lock.retryInterval=10
+client.rm.lock.retryTimes=30
+client.rm.lock.retryPolicyBranchRollbackOnConflict=true
+client.rm.reportRetryCount=5
+client.rm.tableMetaCheckEnable=false
+client.rm.sqlParserType=druid
+client.rm.reportSuccessEnable=false
+client.rm.sagaBranchRegisterEnable=false
+client.tm.commitRetryCount=5
+client.tm.rollbackRetryCount=5
+client.tm.defaultGlobalTransactionTimeout=60000
+client.tm.degradeCheck=false
+client.tm.degradeCheckAllowTimes=10
+client.tm.degradeCheckPeriod=2000
+store.mode=db
+store.file.dir=file_store/data
+store.file.maxBranchSessionSize=16384
+store.file.maxGlobalSessionSize=512
+store.file.fileWriteBufferCacheSize=16384
+store.file.flushDiskMode=async
+store.file.sessionReloadReadSize=100
+store.db.datasource=druid
+store.db.dbType=mysql
+store.db.driverClassName=com.mysql.cj.jdbc.Driver
+store.db.url=jdbc:mysql://127.0.0.1:3306/seata?characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&allowMultiQueries=true&allowPublicKeyRetrieval=true
+store.db.user=username
+store.db.password=password
+store.db.minConn=5
+store.db.maxConn=30
+store.db.globalTable=global_table
+store.db.branchTable=branch_table
+store.db.queryLimit=100
+store.db.lockTable=lock_table
+store.db.maxWait=5000
+store.redis.host=127.0.0.1
+store.redis.port=6379
+store.redis.maxConn=10
+store.redis.minConn=1
+store.redis.database=0
+store.redis.password=null
+store.redis.queryLimit=100
+server.recovery.committingRetryPeriod=1000
+server.recovery.asynCommittingRetryPeriod=1000
+server.recovery.rollbackingRetryPeriod=1000
+server.recovery.timeoutRetryPeriod=1000
+server.maxCommitRetryTimeout=-1
+server.maxRollbackRetryTimeout=-1
+server.rollbackRetryTimeoutUnlockEnable=false
+client.undo.dataValidation=true
+client.undo.logSerialization=jackson
+client.undo.onlyCareUpdateColumns=true
+server.undo.logSaveDays=7
+server.undo.logDeletePeriod=86400000
+client.undo.logTable=undo_log
+client.log.exceptionRate=100
+transport.serialization=seata
+transport.compressor=none
+metrics.enabled=false
+metrics.registryType=compact
+metrics.exporterList=prometheus
+metrics.exporterPrometheusPort=9898
+```
+
+### nacos-config.sh
+
+```shell
+#!/usr/bin/env bash
+# Copyright 1999-2019 Seata.io Group.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at、
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+while getopts ":h:p:g:t:u:w:" opt
+do
+  case $opt in
+  h)
+    host=$OPTARG
+    ;;
+  p)
+    port=$OPTARG
+    ;;
+  g)
+    group=$OPTARG
+    ;;
+  t)
+    tenant=$OPTARG
+    ;;
+  u)
+    username=$OPTARG
+    ;;
+  w)
+    password=$OPTARG
+    ;;
+  ?)
+    echo " USAGE OPTION: $0 [-h host] [-p port] [-g group] [-t tenant] [-u username] [-w password] "
+    exit 1
+    ;;
+  esac
+done
+
+if [[ -z ${host} ]]; then
+    host=localhost
+fi
+if [[ -z ${port} ]]; then
+    port=8848
+fi
+if [[ -z ${group} ]]; then
+    group="SEATA_GROUP"
+fi
+if [[ -z ${tenant} ]]; then
+    tenant=""
+fi
+if [[ -z ${username} ]]; then
+    username=""
+fi
+if [[ -z ${password} ]]; then
+    password=""
+fi
+
+nacosAddr=$host:$port
+contentType="content-type:application/json;charset=UTF-8"
+
+echo "set nacosAddr=$nacosAddr"
+echo "set group=$group"
+
+failCount=0
+tempLog=$(mktemp -u)
+function addConfig() {
+  curl -X POST -H "${contentType}" "http://$nacosAddr/nacos/v1/cs/configs?dataId=$1&group=$group&content=$2&tenant=$tenant&username=$username&password=$password" >"${tempLog}" 2>/dev/null
+  if [[ -z $(cat "${tempLog}") ]]; then
+    echo " Please check the cluster status. "
+    exit 1
+  fi
+  if [[ $(cat "${tempLog}") =~ "true" ]]; then
+    echo "Set $1=$2 successfully "
+  else
+    echo "Set $1=$2 failure "
+    (( failCount++ ))
+  fi
+}
+
+count=0
+for line in $(cat $(dirname "$PWD")/config.txt | sed s/[[:space:]]//g); do
+  (( count++ ))
+	key=${line%%=*}
+    value=${line#*=}
+	addConfig "${key}" "${value}"
+done
+
+echo "========================================================================="
+echo " Complete initialization parameters,  total-count:$count ,  failure-count:$failCount "
+echo "========================================================================="
+
+if [[ ${failCount} -eq 0 ]]; then
+	echo " Init nacos config finished, please start seata-server. "
+else
+	echo " init nacos config fail. "
+fi
 ```
 
 
@@ -453,21 +542,15 @@ zeroDateTimeBehavior=convertToNull&serverTimezone=UTC
 
 ## 版本问题
 
-```
+```shell
 nested exception is io.seata.common.exception.FrameworkException: No available service
-
 no available service 'default' found, please make sure registry config correct
-
 lsof -i:9999
 ```
 
-## 注册到nacos非常慢
+## 其他
 
-暂未解决
-
-
-
-
+（偷来的东西）
 
 **1.xid未传递** 
 
