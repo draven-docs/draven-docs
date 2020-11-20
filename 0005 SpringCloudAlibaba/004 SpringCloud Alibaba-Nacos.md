@@ -1,79 +1,275 @@
 # Spring Cloud Alibaba-Nacos
 
-主页
-
-https://github.com/spring-cloud-incubator/spring-cloud-alibaba/blob/master/README-zh.md
-
-## 组件一 Nacos
-
-安装说明：
-
-https://nacos.io/zh-cn/docs/what-is-nacos.html
-
-说明：
-
-​		Spring Cloud Alibaba Nacos Config 是 Config Server 和 Client 
-的替代方案，客户端和服务器上的概念与 Spring Environment 和 PropertySource 有着一致的抽象，在特殊的 bootstrap 阶段，配置被加载到 Spring 
-环境中。当应用程序通过部署管道从开发到测试再到生产时，您可以管理这些环境之间的配置，并确保应用程序具有迁移时需要运行的所有内容。
-
-搭建：
-
-单机版：看说明文档即可
-
-### 关键特性
-
- 服务发现和服务健康监测
-
- 动态配置服务，带管理界面
-
- 动态 DNS 服务
-
- 服务及其元数据管理
-
-## 下载
-
- 默认下载 jar 包，本人采用 docker 一键安装部署
-
+```shell
+# 参考资料
+# 主页
+# https://github.com/spring-cloud-incubator/spring-cloud-alibaba/blob/master/README-zh.md
+# https://nacos.io/zh-cn/docs/what-is-nacos.html
 ```
-#nacos
+
+
+
+```shell
+#		Spring Cloud Alibaba Nacos Config 是 Config Server 和 Client 的替代方案，客户端和服务器上的概念与 Spring Environment 和 PropertySource 有着一致的抽象，在特殊的 bootstrap 阶段，配置被加载到 Spring 环境中。当应用程序通过部署管道从开发到测试再到生产时，可以管理这些环境之间的配置，并确保应用程序具有迁移时需要运行的所有内容。
+```
+
+
+
+# Nacos
+
+## 关键特性
+
+```shell
+# 服务发现和服务健康监测
+
+# 动态配置服务，带管理界面
+
+# 动态 DNS 服务
+
+# 服务及其元数据管理
+```
+
+
+
+# 服务注册和发现
+
+ 目前主流的服务注册和发现组件有 :
+
+ Consul
+
+ Eureka（闭源）
+
+ Etcd ..
+
+### 
+
+## 服务提供者
+
+```yaml
+<dependency>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+			<version>2.2.3.RELEASE</version>
+</dependency>
+```
+
+```yaml
+server:
+  port: 8762
+spring:
+  application:
+    name: nacos-provider
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848	# nacos 服务地址
+        # 若开启了auth验证
+        username: nacos
+        password: nacos
+```
+
+
+
+```java
+// 启用服务注册发现
+@EnableDiscoveryClient
+@SpringBootApplication
+public class NacosProviderApplication {
+	public static void main(String[] args) {
+		SpringApplication.run(NacosProviderApplication.class, args);
+	}
+}
+```
+
+
+
+##  服务消费者
+
+## 服务调用
+
+ nacos 实现了 Spring Cloud 服务注册和发现的相关接口，所以与其他服务注册与发现组件无缝切换。
+
+ RestTemplate
+
+ Feign
+
+
+
+### 提供服务
+
+```java
+@RestController
+@Slf4j
+public class ProviderController {
+		@GetMapping("/hello")
+		public String hello(@RequestParam(value = "name",defaultValue = "forezp",required = false)String name){
+        return "hi "+name;
+}
+```
+
+
+
+### 消费服务
+
+#### RestTemplate
+
+ 使用 Ribbon 作为负载均衡组件
+
+```java
+<dependency>
+	<groupId>org.springframework.cloud</groupId>
+	<artifactId>spring-cloud-starter-ribbon</artifactId>
+</dependency>
+	@LoadBalanced	// 启用 Ribbon
+	@Bean
+	public RestTemplate restTemplate(){
+		return new RestTemplate();
+	}
+@RestController
+public class ConsumerController {
+
+    @Autowired
+    RestTemplate restTemplate;
+
+ 		@GetMapping("/hi-resttemplate")
+    public String hiResttemplate(){
+        return restTemplate.getForObject("http://nacos-provider/hi?name=resttemplate",String.class);
+    }
+```
+
+
+
+#### Feign
+
+```xml
+<dependency>
+	<groupId>org.springframework.cloud</groupId>
+   <artifactId>spring-cloud-starter-openfeign</artifactId>
+</dependency>
+```
+
+
+
+```java
+@EnableFeignClients		// 开启 Feign
+public class NacosConsumerApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(NacosConsumerApplication.class, args);
+	}
+@FeignClient("nacos-provider")
+public interface ProviderClient {
+
+    @GetMapping("/hi")
+    String hi(@RequestParam(value = "name", defaultValue = "forezp", required = false) String name);
+}
+  
+  
+@RestController
+public class ConsumerController {
+    @Autowired
+    ProviderClient providerClient;
+
+    @GetMapping("/hello-feign")
+    public String hiFeign(){
+       return providerClient.hi("feign");
+    }
+}
+```
+
+
+
+## 配置中心
+
+```xml
+<dependency>
+	<groupId>com.alibaba.cloud</groupId>
+	<artifactId>spring-cloud-alibaba-nacos-config</artifactId>
+	<version>2.2.3.RELEASE</version>
+</dependency>
+```
+
+ bootstrap.yml (不是 application.yml!)
+
+```yaml
+spring:
+  application:
+    name: nacos-provider
+  cloud:
+    nacos:
+      config:
+        server-addr: 127.0.0.1:8848
+        file-extension: yaml	# 配置的扩展名
+        prefix: nacos-provider	# 配置文件前缀 默认为 spiring.application.name
+        username: nacos
+        password: nacos
+  profiles:
+    active: dev
+    # 完整格式 ${prefix}-${spring.profile.active}.${file-extension}
+```
+
+
+
+```java
+@RestController
+@RefreshScope	// 配置热加载
+public class ConfigController {
+
+    @Value("${username:lily}")
+    private String username;
+
+    @RequestMapping("/username")
+    public String get() {
+        return username;
+    }
+}
+```
+
+# 环境搭建
+
+## 单机
+
+### Linux
+
+```shell
+# 获取运行包
+
+# 修改application.properties
+
+# 创建数据库并创建相关表
+
+# 启动服务
+```
+
+### Docker
+
+```shell
+# nacos
 docker run -p 8848:8848 \
 --name nacos-server \
 -e MODE=standalone \	# 单节点启动
 --privileged=true \
 -v /data/docker/var/lib/nacos/conf/application.properties:/home/nacos/conf/application.properties \
--d docker.io/nacos/nacos-server:1.0.0
+-d docker.io/nacos/nacos-server:1.4.0
+
+# 需要修改application.properies 涉及采用MySQL数据库启动
 ```
 
- 默认路径 : http://localhost:8848/nacos
+ 
 
- 默认账户密码均为 nacos
-
-## 生产级
-
- 注意 : 现在全部采用Nacos1.0.0为兼容SpringClou以及Boot2.1
-
- 创建文件夹挂载目录
-
-```
-mkdir -p /docker/nacos/conf
-mkdir -p /docker/nacos/data
+```shell
+# 默认路径
+http://localhost:8848/nacos
+# 默认账户密码均为 nacos
 ```
 
- 需 5.7 以上版本 MySQL
 
-```
-docker run -p 3306:3306 \
---name nacos-mysql \
--e MYSQL_ROOT_PASSWORD=agefades \ # 密码请自定义
---privileged=true \
--v /docker/nacos/data:/var/lib/mysql \
--v /docker/nacos/conf/my.cnf:/etc/mysql/conf.d/mysql.cnf \
--d docker.io/mysql:5.7
-```
 
- 修改字符编码（MySQL 默认拉丁文）
+### Nacos-Mysql
 
-```
+```shell
+#  需 5.7 以上版本 MySQL
+#  修改字符编码（MySQL 默认拉丁文）
 vim /docker/nacos/conf/my.cnf
 
 # 加入下面内容
@@ -85,9 +281,10 @@ default-character-set=utf8
 default-character-set=utf8
 ```
 
- 进入容器，创建数据库
 
-```
+
+```shell
+# 进入容器，创建数据库
 docker exec -it nacos-mysql bash
 
 mysql -u root -p
@@ -96,10 +293,33 @@ mysql -u root -p
 create database nacos;
 ```
 
- 创建 nacos 配置文件
 
+
+```shell
+# 采用Nacos1.4.0 兼容Boot2.3.x-SpringCloud-SpringCloudAlibaba(nacos-client-1.3.3)
+# 创建文件夹挂载目录
+mkdir -p /docker/nacos/conf
+mkdir -p /docker/nacos/data
 ```
-# 首先创建配置文件
+
+
+
+```shell
+docker run -p 3306:3306 \
+--name nacos-mysql \
+-e MYSQL_ROOT_PASSWORD=xxxxxxxx \ # 密码请自定义
+--privileged=true \
+-v /docker/nacos/data:/var/lib/mysql \
+-v /docker/nacos/conf/my.cnf:/etc/mysql/conf.d/mysql.cnf \
+-d docker.io/mysql:5.7  
+```
+
+
+
+```shell
+# 创建 nacos 配置文件
+# 首先创建配置文件(此文件需要更新至最新版)
+# since 1.3.0 支持Auth
 vim /docker/nacos/conf/application.properties
 
 # spring
@@ -110,7 +330,7 @@ spring.datasource.platform=${SPRING_DATASOURCE_PLATFORM:""}
 nacos.cmdb.dumpTaskInterval=3600
 nacos.cmdb.loadDataAtStart=false
 
-
+# 支持平台
 spring.datasource.platform=mysql
 db.num=1
 # ip : port 看是否需要修改
@@ -140,9 +360,10 @@ nacos.naming.distro.syncRetryDelay=5000
 nacos.naming.data.warmup=true
 ```
 
- 启动容器
 
-```
+
+```shell
+#  启动容器
 docker run -p 8848:8848 \
 --name nacos-server \
 -e MODE=standalone \
@@ -151,348 +372,120 @@ docker run -p 8848:8848 \
 -d docker.io/nacos/nacos-server:1.0.0
 ```
 
-[![UTOOLS1561962757897.png](https://camo.githubusercontent.com/75aaf38c3305850f44f83161425202706a498db9/68747470733a2f2f692e6c6f6c692e6e65742f323031392f30372f30312f3564313961393038613066646231303432372e706e67)](https://camo.githubusercontent.com/75aaf38c3305850f44f83161425202706a498db9/68747470733a2f2f692e6c6f6c692e6e65742f323031392f30372f30312f3564313961393038613066646231303432372e706e67)
-
-## 
-
-## 服务注册和发现
-
- 目前主流的服务注册和发现组件有 :
-
- Consul
-
- Eureka（闭源）
-
- Etcd ..
-
-### 
-
-### 构建服务提供者
-
-```
-<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-			<version>0.9.0.RELEASE</version>
-</dependency>
-
-server:
-  port: 8762
-spring:
-  application:
-    name: nacos-provider
-  cloud:
-    nacos:
-      discovery:
-        server-addr: 127.0.0.1:8848	# nacos 服务地址
-@SpringBootApplication
-@EnableDiscoveryClient 	// 启用服务注册发现
-public class NacosProviderApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(NacosProviderApplication.class, args);
-	}
-
-}
-```
-
-### 
-
-###  构建服务消费者
-
- 同上，略
-
-[![UTOOLS1561963052041.png](https://camo.githubusercontent.com/6b4124161da83b83ace3f8abafeec54d15b90105/68747470733a2f2f692e6c6f6c692e6e65742f323031392f30372f30312f3564313961613264333064633131363937392e706e67)](https://camo.githubusercontent.com/6b4124161da83b83ace3f8abafeec54d15b90105/68747470733a2f2f692e6c6f6c692e6e65742f323031392f30372f30312f3564313961613264333064633131363937392e706e67)
-
-## 
-
-## 服务调用
-
- nacos 实现了 Spring Cloud 服务注册和发现的相关接口，所以与其他服务注册与发现组件无缝切换。
-
- RestTemplate
-
- Feign
-
-### 
-
-### 提供服务
-
-```
-@RestController
-@Slf4j
-public class ProviderController {
-
-@GetMapping("/hi")
-public String hi(@RequestParam(value = "name",defaultValue = "forezp",required = false)String name){
-
-        return "hi "+name;
-    }
-}
-```
 
 
+## 集群
 
-### 消费服务
+### Linux集群搭建
 
-
-
-#### RestTemplate
-
- 使用 Ribbon 作为负载均衡组件
-
-```
-<dependency>
-	<groupId>org.springframework.cloud</groupId>
-	<artifactId>spring-cloud-starter-ribbon</artifactId>
-</dependency>
-	@LoadBalanced	// 启用 Ribbon
-	@Bean
-	public RestTemplate restTemplate(){
-		return new RestTemplate();
-	}
-@RestController
-public class ConsumerController {
-
-    @Autowired
-    RestTemplate restTemplate;
-
- 	@GetMapping("/hi-resttemplate")
-    public String hiResttemplate(){
-        return restTemplate.getForObject("http://nacos-provider/hi?name=resttemplate",String.class);
-    }
-```
-
-#### 
-
-#### FeignClient
-
-```
-<dependency>
-	<groupId>org.springframework.cloud</groupId>
-   <artifactId>spring-cloud-starter-openfeign</artifactId>
-</dependency>
-@EnableFeignClients		// 开启 Feign
-public class NacosConsumerApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(NacosConsumerApplication.class, args);
-	}
-@FeignClient("nacos-provider")
-public interface ProviderClient {
-
-    @GetMapping("/hi")
-    String hi(@RequestParam(value = "name", defaultValue = "forezp", required = false) String name);
-}
-@RestController
-public class ConsumerController {
-
-
-    @Autowired
-    ProviderClient providerClient;
-
-    @GetMapping("/hi-feign")
-    public String hiFeign(){
-       return providerClient.hi("feign");
-    }
-}
-```
-
-## 
-
-## 配置中心
-
-```
-<dependency>
-	<groupId>org.springframework.cloud</groupId>
-	<artifactId>spring-cloud-alibaba-nacos-config</artifactId>
-	<version>0.9.0.RELEASE</version>
-</dependency>
-```
-
- bootstrap.yml (不是 application.yml!)
-
-```
-spring:
-  application:
-    name: nacos-provider
-  cloud:
-    nacos:
-      config:
-        server-addr: 127.0.0.1:8848
-        file-extension: yaml	# 配置的扩展名
-        prefix: nacos-provider	# 配置文件前缀 默认为 spiring.application.name
-  profiles:
-    active: dev
-    # 完整格式 ${prefix}-${spring.profile.active}.${file-extension}
-```
-
-[![UTOOLS1561963845758.png](https://camo.githubusercontent.com/29483ec4a2a7bb10cda8b059d297d5c4d47bda17/68747470733a2f2f692e6c6f6c692e6e65742f323031392f30372f30312f3564313961643438643132643237313530372e706e67)](https://camo.githubusercontent.com/29483ec4a2a7bb10cda8b059d297d5c4d47bda17/68747470733a2f2f692e6c6f6c692e6e65742f323031392f30372f30312f3564313961643438643132643237313530372e706e67)
-
-```
-@RestController
-@RefreshScope	// 配置热加载
-public class ConfigController {
-
-    @Value("${username:lily}")
-    private String username;
-
-    @RequestMapping("/username")
-    public String get() {
-        return username;
-    }
-}
-```
-
-# 集群
-
-## Linux集群搭建
-
-首先我们在一个目录下新建一个集群文件夹
+#### MySQL数据
 
 ```shell
-mkdir nacos-cluster
+# 然后我们先来将数据库新建好（集群版基于数据库）
+# 新建一个名叫nacos的数据库
+# 然后在里面执行sql文件，后面的用户名可以更改，密码采用的是加密算法需要去重新生成加密算法密码然后添加
+# 密码默认为nacos(默认加密的算法) 数据库修改之后修改配置文件
 ```
 
-然后解压三个nacos的文件放进去分别命名为nacos1，nacos2，nacos3
+#### Nacos
 
-然后我们先来将数据库新建好（集群版基于数据库）
+```shell
+# 首先我们在一个目录下新建一个集群文件夹,然后解压三个nacos的文件放进去分别命名
+mkdir nacos-cluster{nacos1，nacos2，nacos3}
 
-首先新建一个名叫nacos的数据库
-
-然后在里面执行sql文件，后面的用户名可以更改，密码采用的是加密算法需要去重新生成加密算法密码然后添加
-
-### MySQL数据
-
-密码默认为nacos(默认加密的算法)
-
-数据库修改之后修改配置文件
-
-进入他的conf目录下找到
-
-cluster.conf.example这里只是一个模板我们把它复制一下然后改个名字,将他改为cluster.conf
-
-```
+# 
+cd conf
+# mv cluster.conf.example cluster.conf
 cp cluster.conf.example cluster.conf
-```
 
-然后进入编辑修改集群地址，（最少三个）(这里配成我们的ip和端口号)
+vi cluster.conf
 
-```
-vim cluster.conf
-```
+ip1 8848
+ip2 8849
+ip3 8850
 
-然后去修改他的mysql路径
 
-首先编辑配置文件application.properties
+# 以下文件三个节点均需要配置
+# 编辑配置文件application.properties
+vi application.properties
 
-```
-vim application.properties
-```
-
-然后在里面加上mysql的配置信息（路径和用户名密码写自己的还有注意数据库名一致）(三个都要改还有端口)
-
-```
 spring.datasource.platform=mysql
 db.num=1
-db.url.0=jdbc:mysql://39.108.158.33:3306/nacos?characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&serverTimezone=Asia/Shanghai
+db.url.0=jdbc:mysql://31.108.158.23:3306/nacos?characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&serverTimezone=Asia/Shanghai
 db.user=root
-db.password=bigkang
+db.password=xxxxxxxx
+
+
+# nacos启动端口
+server.port=8848
+
+# 启动服务
+cd bin
+sh startup.sh 
 ```
 
-然后修改他的端口号（因为我们在一台机器中进行集群所以需要修改端口号）
 
-分别修改
 
-```
-nacos1的配置文件
-server.port=8801
+# FAQ
 
-nacos2的配置文件
-server.port=8802
-
-nacos3的配置文件
-server.port=8803
-```
-
-这样我们就编写好了集群然后我们来启动吧
-
-直接进入bin目录下找到启动脚本直接启动
-
-```
- sh startup.sh 
-```
-
-我们一个一个地启动就完成了（注：可能会出现很多问题）
-
-# 问题描述
-
-首先是秒退那么肯定就是Jvm的内存不够了，由于集群模式默认的启动大小是2个g所以我们需要去进行堆内存的调整具体如下
-
-我们可以看到单机版启动512m，集群的将他已经修改默认是2g，我们把它修改为
-
-```
+```shell
+# 秒退-Jvm的内存不够了，由于集群模式默认的启动大小是2个g所以我们需要去进行堆内存的调整
+# 单机版启动512m，集群默认是2g，修改
 -server -Xms256m -Xmx512m  -XX:PermSize=128m -XX:MaxPermSize=256m
+
+# ---
+docker run -p 8848:8848 \
+--name nacos-server \
+-e JAVA_TS='-Xmx256m -Xms256m -XX:+UseG' \
+-e MODE=standalone \
+--privileged=true \
+-v /docker/nacos/conf/application.properties:/home/nacos/conf/application.properties \
+-d docker.io/nacos/nacos-server
 ```
 
-然后再启动就行了
 
- 如果还是有问题那么我们就先去查看他的日志文件
 
- 进入logs然后查看文件
+```shell
+# 查看日志文件
 
-这个原因可能是因为数据源没写对，还有就是使用了8.0的数据库作为nacos的数据存储，只要将他改成5.6或者修改mysql8的一些配置文件就能实现
-
-如果出现了各种错误首先我们先排查两个日志文件
-
-```
-vim nacos.log 
-
-vim start.out 
+cd logs
+tail -f nacos.log
+tail -f start.out
 ```
 
-通过这两个日志文件我们就能定位他的错误了
+# 卸载
 
-# 环境搭建完毕一键清理
+## Docker-单机版
 
-## 清理单机版生产级Docker
-
-停止以及删除容器
-
-```
+```shell
+# 停止以及删除容器
 docker stop nacos-server
 docker stop nacos-mysql
 
 docker rm nacos-server
 docker rm nacos-mysql
-```
 
-删除镜像（可以不用删除留着以后用）
-
-```
+# 删除镜像
 docker rmi docker.io/nacos/nacos-server
 docker rmi docker.io/mysql:5.7
-```
 
-删除挂载目录（删除后不可恢复）
-
-```
+# 删除挂载目录（删除后不可恢复）
 rm -rf /docker/nacos
 ```
 
-重新快速部署
 
-```
+
+```shell
+# 快速部署
 docker run -p 3306:3306 \
 --name nacos-mysql \
--e MYSQL_ROOT_PASSWORD=bigkang \
+-e MYSQL_ROOT_PASSWORD=xxxxxxxx \
 --privileged=true \
 -v /docker/nacos/data:/var/lib/mysql \
 -v /docker/nacos/conf/my.cnf:/etc/mysql/conf.d/mysql.cnf \
 -d docker.io/mysql:5.7
 
-
---------------------------------------------------
+# --------------------------------------------------
 
 docker run -p 8848:8848 \
 --name nacos-server \
@@ -503,33 +496,25 @@ docker run -p 8848:8848 \
 -d docker.io/nacos/nacos-server
 ```
 
-## 
 
-## 清理集群版生产级Docker
 
-停止容器
+## 集群版Docker
 
-```
+```shell
+# 停止容器
 docker stop  nacos-node1
 docker stop  nacos-node2
 docker stop  nacos-node3
-```
 
-删除容器
-
-```
+# 删除容器
 docker rm  nacos-node1
 docker rm  nacos-node2
 docker rm  nacos-node3
 ```
 
-
-
-
-
-
-
 # 附录
+
+需要更新到最新版本
 
 ```mysql
 /******************************************/
@@ -722,6 +707,6 @@ CREATE TABLE roles (
 
 INSERT INTO users (username, password, enabled) VALUES ('agefades', '$2a$10$EuWPZHzz32dJN7jexM34MOeYirDdFAZm2kuWj7VEOJhhZkDrxfvUu', TRUE);
 
-INSERT INTO roles (username, role) VALUES ('agefades', 'ROLE_ADMIN');
+INSERT INTO roles (username, role) VALUES ('xxxxxx', 'ROLE_ADMIN');
 ```
 
