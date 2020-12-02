@@ -162,6 +162,19 @@ http://www.zentao.net/book/zentaopmshelp/40.html
 </repositories>
 ```
 
+基于maven命令行
+
+```shell
+# 连接启动器 指定 依赖 坐标 boot版本号 文件夹路径 指定名字
+curl https://start.spring.io/starter.tgz \
+  -d dependencies=webflux,actuator,data-neo4j  \
+  -d bootVersion=2.4.0-RC1 \
+  -d baseDir=Neo4jSpringBootExample \
+  -d name=Neo4j%20SpringBoot%20Example | tar -xzvf -
+```
+
+
+
 # Idea
 
 ### 主题样式
