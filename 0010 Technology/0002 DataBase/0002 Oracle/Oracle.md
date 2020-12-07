@@ -241,6 +241,15 @@ select listagg(code, ',') within group(order by order_num) as code,
                      where g.type = 'problem_type') k
             on k.code = o.order_num)
  group by names;
+
+
+
+  -- 方式二
+  select     dbms_lob.substr((SELECT  wm_concat(d.name)  AS "name"
+  FROM t_dict d  WHERE d.type='problem_type' and  d.code IN
+  (select   regexp_substr('1,2,3'||',null'  , '[^,]+', 1, level) codes from  DUAL
+  connect by regexp_substr('1,2,3'||',null'  , '[^,]+', 1, level) is not null )
+  )) AS "name" from dual
 ```
 
 
