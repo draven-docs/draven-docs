@@ -187,7 +187,61 @@ select m.mc, trunc(dbms_random.value(100, 1000)) zbz
         inner join tmp dd
         on dd.text = cc.text
 ```
-
+## 字符串转多列（翻译-拼接）
+```plsql
+select listagg(code, ',') within group(order by order_num) as code, 
+       listagg(names, ',') within group(order by order_num) as results
+  from (select *
+          from (select distinct *
+                  from (select regexp_substr(q.nums, '[^,]+', 1, Level, 'i') order_num,
+                               names
+                          from (select '11,12,13' nums, '张三' names
+                                  from dual
+                                union all
+                                select '4,5' nums, '李四' names
+                                  from dual
+                                union all
+                                select '5,6' nums, '王五' names
+                                  from dual) q
+                        connect by Level <=
+                                   LENGTH(q.nums) -
+                                   LENGTH(REGEXP_REPLACE(q.nums, ',', '')) + 1)
+                 order by order_num) o
+        
+          left join (select code, name, type
+                      from (select '11' as code,
+                                   '哈哈' as name,
+                                   'problem_type' as type
+                              from dual
+                            union all
+                            select '12' as code,
+                                   '嘻嘻' as name,
+                                   'problem_type' as type
+                              from dual
+                            union all
+                            select '13' as code,
+                                   '嘿嘿' as name,
+                                   'problem_type' as type
+                              from dual
+                             union all
+                            select '4' as code,
+                                   '呦吼' as name,
+                                   'problem_type' as type
+                              from dual
+                             union all
+                            select '5' as code,
+                                   '啊哈' as name,
+                                   'problem_type' as type
+                              from dual
+                             union all
+                            select '6' as code,
+                                   '巴扎嘿' as name,
+                                   'problem_type' as type
+                              from dual) g
+                     where g.type = 'problem_type') k
+            on k.code = o.order_num)
+ group by names;
+```
 
 
 ##  查询当前用户下所有表结构信息
