@@ -31,6 +31,27 @@ sudo service iptables status
 sudo service iptables stop 
 ```
 
+### alias
+
+```shell
+# 一般使用当前用户系统变量配置
+vi .bash_profile
+# 配置一些操作
+ # 切换至指定目录
+alias upload='cd /path/'
+ # 快速浏览日志
+alias taillog="tail -100f  /path/nohup.out"
+# 配置生效(当前用户系统变量)
+source .bash_profile
+```
+
+```shell
+# 查看防火墙状态
+sudo service iptables status
+# 关闭防火墙
+sudo service iptables stop 
+```
+
 ### 重启网卡
 
 ```shell
