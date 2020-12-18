@@ -1,4 +1,4 @@
-## config-server
+## Config-server
 
 命名格式
 
@@ -9,6 +9,33 @@
 # name 服务名  
 # profies 环境
 # label 分支（branch）
+
+# 格式
+http://ip:port/{application}/{profile}/{label}
+# 例如
+http://ip:port/config-server/dev/master
+
+# 格式
+http://ip:port/{label}{application}-{profile}.json
+# 例如
+http://ip:port/config-server-dev.yaml
+http://ip:port/config-server-dev.properties
+http://ip:port/config-server-dev.json
+http://ip:port/master/config-server-dev.json
+```
+
+```xml
+<dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+<dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+<dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-config-server</artifactId>
+</dependency>
 ```
 
 
@@ -20,9 +47,8 @@
 
 
 
-
-
 ```yaml
+# github
 spring:
  cloud:
   config:
@@ -34,6 +60,18 @@ spring:
      basedir: # 配置文件拉取到指定位置
 env:
  test # 具体环境
+
+# native
+spring:
+  application:
+    name: config-server
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: [ file:/path/]
 
 # 指定eureka注册中心的地址
 # 暴露端口
@@ -47,22 +85,54 @@ management:
 
 
 
-## config-client
+## Config-client
+
+```xml
+<dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+<dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+<dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-config</artifactId>
+</dependency>
+```
+
+
 
 ```yaml
 # bootstrap.yml
 spring:
  cloud:
   config:
-   discovery：
-    enable: true
-    service-id:  # 配置中心名称
-   profile: # 指定环境 
+    discovery:
+     enable: true # 若指定通过服务发现必须填写service-id
+     service-id:  # 配置中心名称
+    profile: # 指定环境 
  rabbitmq:
   host: ip
   port: 5672
   username: name
   password: password
+  
+
+# native
+spring:
+  application:
+    name: resilience4j-demo
+  cloud:
+    config:
+      uri: http://localhost:30000
+      fail-fast: true
+      profile: native
+      discovery:
+        enabled: true
+        serviceId: config-server
+  config: # springboot2.4.1
+    import: optional:config-server:http://localhost:30000/
 ```
 
 
