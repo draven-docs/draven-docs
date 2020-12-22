@@ -375,3 +375,197 @@ SELECT sid, serial#, username, osuser FROM v$session where sid = 48;
 
 3.将上面锁定的会话关闭：
 ALTER SYSTEM KILL SESSION '48,67';
+
+
+# Oracle
+
+## explain plan
+
+### 用法
+
+```plsql
+-- 示例
+explain plan for + 目标SQL
+
+select * from table(dbms_xplan.display);
+
+SELECT plan_table_output FROM TABLE(DBMS_XPLAN.DISPLAY('PLAN_TABLE'))
+
+
+
+-- plsql
+-- 选中sql f5 获取查看执行计划
+```
+
+### 概念
+
+```plsql
+SELECT * FROM PLAN_TABLE
+
+STATEMENT_ID
+--为一条指定的SQL语句确定特定的执行计划名称。如果在EXPLAN PLAN语句中没有使用SET STATEMENT_ID，那么此值会被设为NULL。 
+
+PLAN_ID
+
+TIMESTAMP
+
+REMARKS
+
+OPERATION
+--在计划的某一步骤执行的操作名称，例如：Filters，Index，Table，Marge Joins and Table等。 
+
+OPTIONS
+--对OPERATION操作的补充，例如：对一个表的操作，OPERATION可能是TABLE ACCESS，但OPTION可能为by ROWID或FULL。
+
+OBJECT_NODE
+
+OBJECT_OWNER
+--拥有此database Object的Schema名或Oracle帐户名。 
+
+OBJECT_NAME
+--Database Object名 
+
+OBJECT_ALIAS
+OBJECT_INSTANCE
+
+OBJECT_TYPE
+--类型，例如：表、视图、索引等等 
+
+OPTIMIZER
+SEARCH_COLUMNS
+
+ID
+--指明某一步骤在执行计划中的位置
+
+PARENT_ID
+--指明从某一操作中取得信息的前一个操作。通过对与ID和PARENT_ID使用Connect By操作，我们可以查询整个执行计划树。
+
+DEPTH
+POSITION
+COST
+CARDINALITY
+BYTES
+OTHER_TAG
+PARTITION_START
+PARTITION_STOP
+PARTITION_ID
+OTHER
+OTHER_XML
+DISTRIBUTION
+CPU_COST
+IO_COST
+TEMP_SPACE
+ACCESS_PREDICATES
+FILTER_PREDICATES
+PROJECTION
+TIME
+QBLOCK_NAME
+
+```
+
+|                   |      |                |      |      |
+| ----------------- | ---- | -------------- | ---- | ---- |
+| STATEMENT_ID      | N    | VARCHAR2(30)   | Y    |      |
+| PLAN_ID           | N    | NUMBER         | Y    |      |
+| TIMESTAMP         | N    | DATE           | Y    |      |
+| REMARKS           | N    | VARCHAR2(4000) | Y    |      |
+| OPERATION         | N    | VARCHAR2(30)   | Y    |      |
+| OPTIONS           | N    | VARCHAR2(255)  | Y    |      |
+| OBJECT_NODE       | N    | VARCHAR2(128)  | Y    |      |
+| OBJECT_OWNER      | N    | VARCHAR2(30)   | Y    |      |
+| OBJECT_NAME       | N    | VARCHAR2(30)   | Y    |      |
+| OBJECT_ALIAS      | N    | VARCHAR2(65)   | Y    |      |
+| OBJECT_INSTANCE   | N    | INTEGER        | Y    |      |
+| OBJECT_TYPE       | N    | VARCHAR2(30)   | Y    |      |
+| OPTIMIZER         | N    | VARCHAR2(255)  | Y    |      |
+| SEARCH_COLUMNS    | N    | NUMBER         | Y    |      |
+| ID                | N    | INTEGER        | Y    |      |
+| PARENT_ID         | N    | INTEGER        | Y    |      |
+| DEPTH             | N    | INTEGER        | Y    |      |
+| POSITION          | N    | INTEGER        | Y    |      |
+| COST              | N    | INTEGER        | Y    |      |
+| CARDINALITY       | N    | INTEGER        | Y    |      |
+| BYTES             | N    | INTEGER        | Y    |      |
+| OTHER_TAG         | N    | VARCHAR2(255)  | Y    |      |
+| PARTITION_START   | N    | VARCHAR2(255)  | Y    |      |
+| PARTITION_STOP    | N    | VARCHAR2(255)  | Y    |      |
+| PARTITION_ID      | N    | INTEGER        | Y    |      |
+| OTHER             | N    | LONG           | Y    |      |
+| OTHER_XML         | N    | CLOB           | Y    |      |
+| DISTRIBUTION      | N    | VARCHAR2(30)   | Y    |      |
+| CPU_COST          | N    | INTEGER        | Y    |      |
+| IO_COST           | N    | INTEGER        | Y    |      |
+| TEMP_SPACE        | N    | INTEGER        | Y    |      |
+| ACCESS_PREDICATES | N    | VARCHAR2(4000) | Y    |      |
+| FILTER_PREDICATES | N    | VARCHAR2(4000) | Y    |      |
+| PROJECTION        | N    | VARCHAR2(4000) | Y    |      |
+| TIME              | N    | INTEGER        | Y    |      |
+| QBLOCK_NAME       | N    | VARCHAR2(30)   | Y    |      |
+
+
+
+
+
+
+
+
+
+```plsql
+full table scans
+-- 这种方式会读取表中的每一条记录，顺序地读取每一个数据块直到结尾标志，对于一个大的数据表来说，使用全表扫描会降低性能，但有些时候，比如查询的结果占全表的数据量的比例比较高时，全表扫描相对于索引选择又是一种较好的办法。
+
+table access by rowid
+--通过ROWID值获取(table access by rowid)：行的rowid指出了该行所在的数据文件，数据块及行在该块中的位置，所以通过rowid来存取数据可以快速定位到目标数据上，是oracle存取单行数据的最快方法
+
+index scan
+--索引扫描(index scan)：先通过索引找到对象的rowid值，然后通过rowid值直接从表中找到具体的数据，能大大提高查找的效率。
+```
+
+
+
+
+
+```plsql
+--执行顺序
+-- 基础表
+-- 基础表(Driving Table)是指被最先访问的表(通常以全表扫描的方式被访问). 根据优化器的不同, SQL语句中基础表的选择是不一样的.
+-- 通常  基础表就是FROM 子句中列在最后的那个表
+```
+
+
+
+
+
+```plsql
+--创建索引           
+create index index_name on table_name(column_name);
+--复合索引
+create index index_name on table_name(column_name1, column_name2, column_name, ...);
+--删除索引：
+drop index index_name;
+--查看某表的所有索引：
+select * from all_index where table_name='表名';
+--查看某表中带有索引的所有列：
+select * from all_ind_columns where table_name='表名';
+
+/**索引的建立原则：
+
+    索引应该建立在WHERE子句中经常使用的列上。如果某个大表经常使用某个字段进行查询，并且检索的行数少于5%，则应该考虑在该列上建立索引。
+    对于两个表连接的字段应该建立索引。
+    如果经常在某个表的字段上进行order by 的话，则也应该在这个列上建立索引。
+    小表数据很少使用全表扫描速度已经很快，没必要建立索引。
+
+索引的优点：
+
+    很大的提高了数据检索的速度；
+    创建唯一索引能够保证数据库表中每一行数据的唯一性（唯一约束性）。
+    提高表与表之间的连接速度。
+*/
+
+
+
+-- != / is not null 
+-- INDEX FULL SCAN
+
+```
+
