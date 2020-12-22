@@ -529,3 +529,44 @@ public class JdkBasedApplication {
 ```
 
 ### Redis
+
+```xml
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-cache</artifactId>
+</dependency>  
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
+```
+
+```yaml
+spring:
+  cache:
+    type: redis
+    redis:
+      ## Entry expiration in milliseconds. By default the entries never expire.
+      time-to-live: 1d
+      #写入redis时是否使用键前缀。
+      use-key-prefix: false
+  # redis相关配置
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    # password: 123456
+    jedis:
+      pool:
+        # 连接池最大连接数（使用负值表示没有限制）
+        max-active: 8
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1ms
+        # 连接池中的最大空闲连接
+        max-idle: 8
+        # 连接池中的最小空闲连接
+        min-idle: 0
+    # 连接超时时间（毫秒）默认是2000ms
+    timeout: 2000ms
+
+```
