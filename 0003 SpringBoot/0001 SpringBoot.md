@@ -696,7 +696,45 @@ test:
 http://www.1024sky.cn/blog/article/66
 ```
 
-## 优雅停机
+# NoSQL
+
+Repositories
+
+## Redis
+
+## MongoDB
+
+## Neo4j
+
+## Solr(暂不考虑)
+
+## Elasticsearch
+
+## Cassandra
+
+## Couchbase
+
+## LDAP
+
+## influxDB
+
+# Caching
+
+## Redis
+
+## Caffeine
+
+## EhCache 2.x
+
+## Simple
+
+Generic
+JCache (JSR-107) (EhCache 3, Hazelcast, Infinispan, and others)
+Hazelcast
+Infinispan
+Couchbase
+
+# 优雅停机
 
  Graceful shutdown
 
@@ -710,20 +748,11 @@ spring:
 
 
 
-## Readiness和Liveness
-
-```yaml
-management:
- health:
-  probes:
-   enabled: true
-```
 
 
+# 构建容器
 
-## 构建容器
-
-### Layering Docker images
+## Layering Docker images
 
 1.编写工程
 
@@ -1970,6 +1999,26 @@ management.endpoint.info.enabled=true
 
 #### JMX Endpoints
 
+
+
+## Kubernetest Probes
+
+### Readiness和Liveness
+
+spring2.3.0.RELEASE新特性
+
+为了更好的支持云原生springBoot支持K8S的就绪探针Readiness与存活探针Liveness
+
+```yaml
+# 开启
+management:
+ health:
+  probes:
+   enabled: true
+```
+
+
+
 ## 健康检查
 
 ### Health
@@ -1981,6 +2030,10 @@ management.endpoint.info.enabled=true
 ### 内建 Metrics
 
 ### 自定义 Metrics
+
+
+
+
 
 # 大纲 end
 
@@ -2195,27 +2248,7 @@ Environment
 
 # # 
 
-# NoSQL
-
-Repositories
-
-## Redis
-
-## MongoDB
-
-## Neo4j
-
-## Solr(暂不考虑)
-
-## Elasticsearch
-
-## Cassandra
-
-## Couchbase
-
-## LDAP
-
-## influxDB
+## 
 
 
 
