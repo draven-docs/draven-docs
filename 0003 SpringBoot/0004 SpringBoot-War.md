@@ -296,11 +296,31 @@ public class DataSourceConfig {
 mvn clean package
 ```
 
+# Tomcat
+
+## 配置jndi数据源
+
+```xml
+<!-- conf/context.xml 注意转义字符-->
+<Resource auth="Container" 
+	driverClassName="com.mysql.cj.jdbc.Driver" 
+	maxActive="100" 
+	maxIdle="30" 
+	maxWait="10000" 
+	name="jndi/demo" 
+	password="12345678" 
+	type="javax.sql.DataSource" 
+	url="jdbc:mysql://127.0.0.1:3306/nacos14?characterEncoding=utf8&amp;serverTimezone=UTC&amp;useSSL=false&amp;allowPublicKeyRetrieval=true" 
+	username="root"/>
+```
+
+
+
 # weblogic
 
 ## 安装
 
 ## 部署war
 
-## 配置数据源
+## 配置数据源jndi
 
