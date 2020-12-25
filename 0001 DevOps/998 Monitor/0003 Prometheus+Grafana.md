@@ -38,6 +38,13 @@
 
 ```
 
+### 命令
+
+```shell
+# 指定配置文件位置
+prometheus -config.file=prometheus.yml
+```
+
 
 
 # Grafana
