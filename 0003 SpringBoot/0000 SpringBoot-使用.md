@@ -1,6 +1,5 @@
 # SpringBoot使用笔记
 
-整理了所boot整合记录
 
 1. SpringBoot实现war包部署
 
@@ -111,7 +110,7 @@ spring-boot-starter-actuator
             <artifactId>spring-boot-maven-plugin</artifactId>
             <!-- java jar 启动时 找不到主类-->
             <configuration>
-                <mainClass>com.cat.little.Application</mainClass>
+                <mainClass>com.noxus.draven.Application</mainClass>
             </configuration>
         </plugin>
     </plugins>
