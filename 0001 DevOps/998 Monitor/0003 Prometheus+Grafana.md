@@ -47,6 +47,39 @@ prometheus -config.file=prometheus.yml
 
 
 
+## 远端存储
+
+### Elasticsearch
+
+### 
+
+```yaml
+# prometheus.yml
+# 配置远端存储 
+remote_write:
+  - url: "http://127.0.0.1:8080/prometheus"  # 对应prometheusbeat对应IP
+```
+
+
+
+### ClickHouse 
+
+```yaml
+# prometheus.yml
+# 配置远端存储 读/写功能
+remote_write: 
+  - url: "http://localhost:9201/write"
+remote_read: 
+  - url: "http://localhost:9201/read"
+  
+# 安装clickHouse 见文档
+
+# 需要编译安装prome2click 比较麻烦
+# https://github.com/mindis/prom2click
+```
+
+
+
 # Grafana
 
 ## 参考
