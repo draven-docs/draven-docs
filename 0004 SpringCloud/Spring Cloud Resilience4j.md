@@ -6,6 +6,8 @@ https://resilience4j.readme.io/docs/bulkhead
 https://resilience4j.readme.io/docs/ratelimiter
 https://resilience4j.readme.io/docs/retry
 
+https://resilience4j.readme.io/docs/getting-started
+
 https://resilience4j.readme.io/docs/feign
 
 https://resilience4j.readme.io/docs/getting-started-3
@@ -16,6 +18,8 @@ https://resilience4j.readme.io/docs/getting-started-6
 https://github.com/resilience4j/resilience4j-spring-cloud2-demo
 
 https://resilience4j.readme.io/docs/micrometer
+
+https://github.com/resilience4j/resilience4j/edit/master/grafana_dashboard.json
 ```
 
 ```shell
@@ -94,6 +98,84 @@ spring:
         enabled: true
 ```
 
+
+
+# 介绍
+
+```shell
+https://resilience4j.readme.io/docs/getting-started
+```
+
+```xml
+<properties>
+ <resilience4j.version>resilience4jVersion</resilience4j.versionresilience4j.version>
+</properties>
+<dependency>
+    <groupId>io.github.resilience4j</groupId>
+    <artifactId>resilience4j-circuitbreaker</artifactId>
+    <version>${resilience4jVersion}</version>
+</dependency>
+<dependency>
+    <groupId>io.github.resilience4j</groupId>
+    <artifactId>resilience4j-ratelimiter</artifactId>
+    <version>${resilience4jVersion}</version>
+</dependency>
+<dependency>
+    <groupId>io.github.resilience4j</groupId>
+    <artifactId>resilience4j-retry</artifactId>
+    <version>${resilience4jVersion}</version>
+</dependency>
+<dependency>
+    <groupId>io.github.resilience4j</groupId>
+    <artifactId>resilience4j-bulkhead</artifactId>
+    <version>${resilience4jVersion}</version>
+</dependency>
+<dependency>
+    <groupId>io.github.resilience4j</groupId>
+    <artifactId>resilience4j-cache</artifactId>
+    <version>${resilience4jVersion}</version>
+</dependency>
+<dependency>
+    <groupId>io.github.resilience4j</groupId>
+    <artifactId>resilience4j-timelimiter</artifactId>
+    <version>${resilience4jVersion}</version>
+</dependency>
+```
+
+
+
+## Core modules
+
+### Circuitbreaker
+
+```shell
+a count-based sliding window and a time-based sliding window
+```
+
+
+
+### Ratelimiter
+
+### Bulkheading
+
+### Automatic retrying
+
+### Result caching
+
+### Timeout Handing
+
+## Add-on modules
+
+### Feign adapter
+
+## Metrics
+
+### micrometer
+
+### metrics
+
+### prometheus
+
 # 附录
 
 ```yaml
@@ -137,6 +219,8 @@ resilience4j.circuitbreaker:
 resilience4j.retry:
     configs:
         default:
+	          maxAttempts: 3
+	          # 未来版本不再使用
             maxRetryAttempts: 3
             waitDuration: 100
             retryExceptions:
@@ -231,5 +315,26 @@ management:
             calls: true
     tags:
       application: ${spring.application.name}
+```
+
+# FAQ
+
+```shell
+# 1 整合问题
+# 必须依赖
+spring-boot-starter-aop
+# 暴露端点
+spring-boot-starter-actuator
+# boot
+resilience4j-spring-boot2
+# cloud
+resilience4j-spring-cloud2
+
+
+# 2 配置不生效问题
+# 配置错误书写 没有采用官方demo配置
+
+# 3 原理xxx 
+
 ```
 
