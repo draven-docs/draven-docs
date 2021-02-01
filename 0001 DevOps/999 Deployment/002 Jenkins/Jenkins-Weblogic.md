@@ -1,94 +1,94 @@
 # Jenkins-Weblogic
 
 ```shell
-# Ç°ÖÃÖªÊ¶
-# °²×°Jenkins
-# ÅäÖÃ JDK
-# ÅäÖÃ Maven
+# å‰ç½®çŸ¥è¯†
+# å®‰è£…Jenkins
+# é…ç½® JDK
+# é…ç½® Maven
 
 
-# ²å¼ş
+# æ’ä»¶
 # Weblogic Deploy Plugin
 ```
 
 
 
-## °²×°²å¼ş
+## å®‰è£…æ’ä»¶
 
 ### WebLogic Deployment Plugin
 
 ```shell
-# °²×° Weblogic Deploy Plugin
-# Èç¹û²»»áÇë°Ù¶È
+# å®‰è£… Weblogic Deploy Plugin
+# å¦‚æœä¸ä¼šè¯·ç™¾åº¦
 ```
 
-## È«¾ÖÅäÖÃ
+## å…¨å±€é…ç½®
 
 ```shell
-# ÆôÓÃweblogic²å¼ş
-# Additional classpath ÅäÖÃÓëweblogicÍ¨ĞÅ
+# å¯ç”¨weblogicæ’ä»¶
+# Additional classpath é…ç½®ä¸weblogicé€šä¿¡
 	wlthint3client.jar
-# Configuration File ÅäÖÃweblogic»ù±¾ĞÅÏ¢
+# Configuration File é…ç½®weblogicåŸºæœ¬ä¿¡æ¯
 	configuration.xml
-# Disable ²»Òª¹´Ñ¡
+# Disable ä¸è¦å‹¾é€‰
 ```
 
 
 
-## ÏîÄ¿ÅäÖÃ
+## é¡¹ç›®é…ç½®
 
 ```shell
-# >¹¹½¨maven¹¤³Ì
-# Ñ¡Ôñ Deploy the artifact to any WebLogic environments
-# ÌîĞ´ÅäÖÃ
+# >æ„å»ºmavenå·¥ç¨‹
+# é€‰æ‹© Deploy the artifact to any WebLogic environments
+# å¡«å†™é…ç½®
 # Task name
-	# ÈÎÎñÃû³Æ ²»×öÒªÇó
+	# ä»»åŠ¡åç§° ä¸åšè¦æ±‚
 # Environment
-	# ¸ù¾İÅäÖÃÎÄ¼ş¶ÁÈ¡
+	# æ ¹æ®é…ç½®æ–‡ä»¶è¯»å–
 # Name
-	# ²¿Êğ°üÃû³Æ
+	# éƒ¨ç½²åŒ…åç§°
 # Base directory where the resource to deploy can be found	
-	# ²¿Êğ°üÔ´Â·¾¶
+	# éƒ¨ç½²åŒ…æºè·¯å¾„
 # Built resource to deploy
-	# ²¿ÊğÎ»ÖÃ
+	# éƒ¨ç½²ä½ç½®
 # Targets
-	# ²»ÖªµÀ¸ÉÂïµÄ
+	# ä¸çŸ¥é“å¹²å˜›çš„
 # WebLogic deployment plan		
-	# Î´Öª
+	# æœªçŸ¥
 # WebLogic libraries	
-	# ×÷Îª×é¼ş
+	# ä½œä¸ºç»„ä»¶
 
-# ÃüÁîĞĞ
+# å‘½ä»¤è¡Œ
 Command Line	
 -adminurl http://ip:port/console -user weblogic -password weblogic123 -debug -remote -verbose  -upload -name xxx.war -source sources/path/xxx.war -targets targets/xxx.war -deploy
 ```
 
 
 
-# ÅäÖÃ
+# é…ç½®
 
-## Í¨ĞÅ°ü
+## é€šä¿¡åŒ…
 
 wlthint3client.jar
 
-## ÅäÖÃÎÄ¼ş
+## é…ç½®æ–‡ä»¶
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <config xmlns="http://org.jenkinsci.plugins/WeblogicDeploymentPlugin"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://org.jenkinsci.plugins/WeblogicDeploymentPlugin plugin-configuration.xsd"> 
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://org.jenkinsci.plugins/WeblogicDeploymentPlugin plugin-configuration.xsd">
     <weblogic-targets>
-              <weblogic-target>
-                     <name>domainName</name>
-                     <target></target>
-                     <host>ip</host>
-                     <port>port</port>
-                     <login>username</login>
-                     <password>password</password>
-                     <authMode>BY_LOGIN</authMode>
-              </weblogic-target>
-       </weblogic-targets>
+        <weblogic-target>
+            <name>domainName</name>
+            <target></target>
+            <host>ip</host>
+            <port>port</port>
+            <login>username</login>
+            <password>password</password>
+            <authMode>BY_LOGIN</authMode>
+        </weblogic-target>
+    </weblogic-targets>
 </config>  
 ```
 
