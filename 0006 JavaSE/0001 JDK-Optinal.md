@@ -4,10 +4,10 @@
 
 ```java
 /**
-orElse ÓÃµÄÊÇÀ¨ºÅÄÚµÄ¶ÔÏó
-orElseGet ÓÃµÄÊÇSupplier½Ó¿Ú·µ»ØµÄ¶ÔÏó¡£ supplier½Ó¿Ú¾ÍÒ»¸öget·½·¨¡£
-ÎÞÈë²Î£¬³ö²ÎÒªºÍOptionalµÄ¶ÔÏóÍ¬ÀàÐÍ¡£
-orElseThrow ÓÃµÄÊÇSupplier½Ó¿Ú·µ»ØµÄ¶ÔÏó£¬Õâ¸ö¶ÔÏó±ØÐëÒªÊµÏÖThrowable¡£ supplier½Ó¿Ú¾ÍÒ»¸öget·½·¨¡£ ÎÞÈë²Î£¬³ö²ÎÒªÊµÏÖThrowable.
+orElse ç”¨çš„æ˜¯æ‹¬å·å†…çš„å¯¹è±¡
+orElseGet ç”¨çš„æ˜¯SupplieræŽ¥å£è¿”å›žçš„å¯¹è±¡ã€‚ supplieræŽ¥å£å°±ä¸€ä¸ªgetæ–¹æ³•ã€‚
+æ— å…¥å‚ï¼Œå‡ºå‚è¦å’ŒOptionalçš„å¯¹è±¡åŒç±»åž‹ã€‚
+orElseThrow ç”¨çš„æ˜¯SupplieræŽ¥å£è¿”å›žçš„å¯¹è±¡ï¼Œè¿™ä¸ªå¯¹è±¡å¿…é¡»è¦å®žçŽ°Throwableã€‚ supplieræŽ¥å£å°±ä¸€ä¸ªgetæ–¹æ³•ã€‚ æ— å…¥å‚ï¼Œå‡ºå‚è¦å®žçŽ°Throwable.
 
 public T orElse(T other)
 
@@ -55,28 +55,28 @@ Throws:
 
 
 
-System.out.println(Optional.ofNullable("ÕýÆ·").orElse("Ìæ´úÆ·"));
-System.out.println(Optional.ofNullable(null).orElse("Ìæ´úÆ·"));
+System.out.println(Optional.ofNullable("æ­£å“").orElse("æ›¿ä»£å“"));
+System.out.println(Optional.ofNullable(null).orElse("æ›¿ä»£å“"));
 
 
-// ÓÐ±¦Âí¾Í²»ÓÃ×ßÂ·
-System.out.println(Optional.ofNullable("±¦Âí").orElseGet(()->"×ßÂ·")); 
-// Ã»±¦Âí£¬¿ÉÒÔÆï×ÔÐÐ³µ
-System.out.println(Optional.ofNullable(null).orElseGet(()->"×ÔÐÐ³µ"));
-// Ã»±¦Âí£¬Ò²¿ÉÒÔÆïµç¶¯³µ
-System.out.println(Optional.ofNullable(null).orElseGet(()->"µç¶¯³µ"));  
+// æœ‰å®é©¬å°±ä¸ç”¨èµ°è·¯
+System.out.println(Optional.ofNullable("å®é©¬").orElseGet(()->"èµ°è·¯")); 
+// æ²¡å®é©¬ï¼Œå¯ä»¥éª‘è‡ªè¡Œè½¦
+System.out.println(Optional.ofNullable(null).orElseGet(()->"è‡ªè¡Œè½¦"));
+// æ²¡å®é©¬ï¼Œä¹Ÿå¯ä»¥éª‘ç”µåŠ¨è½¦
+System.out.println(Optional.ofNullable(null).orElseGet(()->"ç”µåŠ¨è½¦"));  
 
 
-// ÓÐÇ®¾ÍÃ»Òì³£
+// æœ‰é’±å°±æ²¡å¼‚å¸¸
 try {
-    System.out.println(Optional.ofNullable("Ç®").orElseThrow(()->new Exception()));  // ÓÐÇ®²»»áÅ×Òì³£
+    System.out.println(Optional.ofNullable("é’±").orElseThrow(()->new Exception()));  // æœ‰é’±ä¸ä¼šæŠ›å¼‚å¸¸
 } catch (Throwable throwable) {
     throwable.printStackTrace();
 }
 
-// Ã»Ç®¾Í»áÅ×Òì³£
+// æ²¡é’±å°±ä¼šæŠ›å¼‚å¸¸
 try {
-    System.out.println(Optional.ofNullable(null).orElseThrow(()->new Exception()));  // Ã»Ç®Å×Òì³£
+    System.out.println(Optional.ofNullable(null).orElseThrow(()->new Exception()));  // æ²¡é’±æŠ›å¼‚å¸¸
 } catch (Throwable throwable) {
     throwable.printStackTrace();
 }
