@@ -1,14 +1,18 @@
-# Flutter Dart
+# Flutter 
 
 ```shell
 # 移动端开发
-
 FLutter  核心 Dart + C++ +Skia
+```
 
-https://dart.gooddev.org
+# Dart
+
+```shell
+# 资料
+
+# https://dart.gooddev.org
 
 # 安装Dart
-
 
 # 选择开发工具
 	# idea
@@ -262,19 +266,78 @@ void main(){
   print(cat.eat());
   print(Animal.tags= ["xxx"]);
   
-  
-  
-  
-  
   const a1 = Animal();
 }
 
 
 
-
-
 // 	类
 ```
+
+
+
+## Isolates
+
+```dart
+/// 隔离区
+/// dart:isolate library documentation/
+```
+
+
+
+## Future
+
+```dart
+// 使用 async 和 await 关键字的代码是异步的
+/** 
+    使用 async 和 await.
+    使用 Future API，具体描述，
+    参考： 
+    https://www.dartcn.com/guides/libraries/library-tour#future
+
+*/
+Future checkVersion() async {
+  var version = await lookUpVersion();
+  // Do something with version
+}
+// 异步函数 函数体被 async 标示符标记的函数
+Future<String> lookUpVersion() async => '1.0.0';
+```
+
+
+
+## Typedefs
+
+```dart
+/// 别名 
+```
+
+
+
+## 元数据
+
+```dart
+/// 类似java中的注解 
+/// 必须@开头
+/// 元数据可以在 library、 class、 typedef、 type parameter、 constructor、 factory、 function、 field、 parameter 或者 variable 声明之前使用，也可以在 import 或者 export 指令之前使用。 使用反射可以在运行时获取元数据信息
+```
+
+
+
+## 注释
+
+```dart
+// 行注释 
+
+/* 多行注释 但不会忽略文档注释  */ 
+
+/// 或者 文档注释
+/**
+* 文档注释
+*/  
+```
+
+
 
 
 
@@ -372,7 +435,62 @@ Waiting for another flutter command to release the startup lock...
 ## Dart
 
 ```shell
+# 资料
+# https://www.dartcn.com/
+/Users/draven/Documents/documents/web/software/flutter/bin/cache/dart-sdk
 dart --version
+
+# webdev配置
+$HOME/Documents/documents/web/software/flutter/.pub-cache/bin
+
+# https://dart.dev/tools/sdk/archive#stable-channel
+# demo
+https://storage.googleapis.com/dart-archive/channels/be/raw/latest/sdk/dartsdk-<platform>-<architecture>-release.zip
+
+# windows
+https://storage.googleapis.com/dart-archive/channels/stable/release/2.7.2/sdk/dartsdk-windows-ia32-release.zip
+
+# mac
+https://storage.googleapis.com/dart-archive/channels/stable/release/2.10.5/sdk/dartsdk-macos-x64-release.zip
 ```
 
 ## Flutter
+
+```shell
+https://storage.googleapis.com/dart-archive/channels/stable/release/2.10.5/sdk/dartsdk-mac-ia32-release.zip
+
+https://storage.googleapis.com/dart-archive/channels/stable/release/2.10.5/sdk/dartsdk-macos-x64-release.zip
+```
+
+# Flutter_Web
+
+```shell
+# 环境检查
+flutter doctor
+
+# 获取flutter_web 非必要
+git clone https://github.com/flutter/flutter_web.git
+
+# 安装flutter_web的编译工具webdev
+	# 环境变量只配置了flutter sdk而没有配置dart sdk
+flutter pub global activate webdev
+	# 环境变量已经配置了dart sdk
+pub global activate webdev
+
+# 根据提示 配置 $HOME/.pub-cache/bin 非必要
+# 环境变量只配置了flutter sdk而没有配置dart sdk
+flutter pub global run webdev
+# 环境变量已经配置了dart sdk
+ pub global run webdev
+ 
+ 
+# 启动服务
+	# 环境变量只配置了flutter sdk而没有配置dart sdk
+flutter pub global run webdev serve
+	# 环境变量已经配置了dart sdk
+webdev serve
+
+# 访问
+http://localhost:8080
+```
+
