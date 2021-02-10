@@ -569,3 +569,65 @@ select * from all_ind_columns where table_name='表名';
 
 ```
 
+
+## 修改密码
+
+```sql
+ -- 未配置环境变量
+ -- 连接数据库
+ ./sqlplus.exe /nolog
+ -- 登录
+ sql> conn /as sysdba
+ 	-- 此方式需要输入账户密码
+ 	--connect as sysdba;
+ 	
+ -- 修改账户信息
+ -- Demo alert user username identified by newpassword
+ sql> alter user system identified by manager;
+ 
+ -- 解锁账户
+ sql> alter user XXXUSER identified by oracle account unlock;  
+ 
+ 
+ 
+ -- 若有过期时间
+SQL> SELECT * FROM dba_profiles WHERE profile='DEFAULT' AND resource_name='PASSWORD_LIFE_TIME'; 
+PROFILE  
+------------------------------------------------------------  
+RESOURCE_NAME  
+------------------------------------------------------------  
+RESOURCE_TYPE  
+----------------  
+LIMIT  
+------------------------------------------------------------  
+    
+DEFAULT  
+PASSWORD_LIFE_TIME  
+-- 看这里
+PASSWORD  
+180   
+ 
+ 
+ -- 处理方案
+    alter profile default  limit password_life_time unlimited;  
+    commit;  
+ 
+ 
+ -- 最终查询结果
+ -- 若没有过期时间
+SQL> SELECT * FROM dba_profiles WHERE profile='DEFAULT' AND resource_name='PASSWORD_LIFE_TIME';
+
+PROFILE
+------------------------------------------------------------
+RESOURCE_NAME
+----------------------------------------------------------------
+RESOURCE_TYPE
+----------------
+LIMIT
+--------------------------------------------------------------------------------
+DEFAULT
+PASSWORD_LIFE_TIME
+PASSWORD
+UNLIMITED
+```
+
