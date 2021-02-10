@@ -60,7 +60,7 @@
 
 # 命令行 后面有修复 FQA
 Command Line	
--adminurl http://ip:port/console -user weblogic -password weblogic123 -debug -remote -verbose  -upload -name xxx.war -source sources/path/xxx.war -targets targets/xxx.war -deploy
+-adminurl http://ip:port/console -user xxx -password xxxx -debug -remote -verbose  -upload -name xxx.war -source sources/path/xxx.war -targets targets/xxx.war -deploy
 ```
 
 
