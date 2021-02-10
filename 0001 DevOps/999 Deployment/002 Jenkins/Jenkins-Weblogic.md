@@ -27,7 +27,7 @@
 ```shell
 # 启用weblogic插件
 # Additional classpath 配置与weblogic通信
-	wlthint3client.jar
+	wlthint3client.jar(官网推荐并不准确) -> wlfullclient.jar
 # Configuration File 配置weblogic基本信息
 	configuration.xml
 # Disable 不要勾选
@@ -58,7 +58,7 @@
 # WebLogic libraries	
 	# 作为组件
 
-# 命令行
+# 命令行 后面有修复 FQA
 Command Line	
 -adminurl http://ip:port/console -user weblogic -password weblogic123 -debug -remote -verbose  -upload -name xxx.war -source sources/path/xxx.war -targets targets/xxx.war -deploy
 ```
@@ -69,7 +69,7 @@ Command Line
 
 ## 通信包
 
-wlthint3client.jar
+wlthint3client.jar  wlfullclient.jar
 
 ## 配置文件
 
@@ -96,7 +96,86 @@ wlthint3client.jar
 
 # FQA
 
-```shell
+```
+# error
 task completed abnormally (exit code = 1). Check your Weblogic Deployment logs.
+```
+
+## 通信包错误
+
+```shell
+# 1.----------------  TASK EXECUTION -----------
+# 错误: 找不到或无法加载主类 weblogic.Deployer
+# weblogic 12c 生成wlfullclient.jar
+
+	# 官网解释 weblogic12 -- wlthint3client.jar 不靠谱
+
+# 1.1 Change directories to the server/lib directory.
+cd WL_HOME/server/lib
+
+# 1.2 Use the following command to create wlfullclient.jar in the server/lib directory:
+java -jar wljarbuilder.jar
+
+# 1.3 You can now copy and bundle the wlfullclient.jar with client applications.
+
+
+# 通信包改为命令行生成的 wlfullclient.jar
+
+# 参考链接
+# https://docs.oracle.com/cd/E12840_01/wls/docs103/client/jarbuilder.html
+```
+
+## 协议错误
+
+```shell
+# 2. java.net.ProtocolException: Tunneling result unspecified - is the HTTP server at host: 'ip' and port: 'port' a WebLogic Server?; No available router to destination. Ensure the url represents a running admin server and that the credentials are correct. If using http protocol, tunneling must be enabled on the admin server.
+
+# 协议不对 weblogic 控制台默认使用t3协议
+
+Deploy the artifact to any WebLogic environment
+-> 高级 # 注意使用t3协议
+-> 
+Protocol t3
+
+-> WebLogic Deployment Command # 自己编写命令行 注意使用t3协议
+Command Line
+-adminurl t3://ip:port -user xxx -password xxxx -debug -remote -verbose  -upload -name xxxx -source path\xxx.war   -deploy
+
+# 协议来源
+weblogic控制台->域结构(根目录)->高级 ->
+查看获取
+管理协议: t3
+```
+
+```shell
+# 待定
+# 3.java.rmi.ConnectException: Destination ip, port unreachable; nested exception is: java.net.ProtocolException: Tunneling result unspecified - is the HTTP server at host: 'ip' and port: 'port' a WebLogic Server?; No available router to destination
+
+# configuration.xml中临时添加
+<port>port</port> -> <port>port/console</port>
+
+
+```
+
+## 堆内存问题
+
+```shell
+# 4. weblogic.deploy.api.tools.deployer.DeployerException: Java heap space
+
+Jenkins
+->Manage Jenkins
+->Configure System
+->WebLogic Deployment Plugin
+->高级
+->添加参数
+Java Options to use	 -Xms512M -Xmx512M 
+```
+
+## SVN配置
+
+```shell
+# 5.jenkins如何配置SVN
+
+# 建议使用小乌龟来定位 SVN的路径
 ```
 
