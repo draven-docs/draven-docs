@@ -171,11 +171,57 @@ Jenkins
 Java Options to use	 -Xms512M -Xmx512M 
 ```
 
+## Jenkins控制台乱码
+
+```
+->系统管理
+->Configure System
+->全局属性：
+->新增
+KEY: LANG; VALUE:zh.CH.UTF-8
+```
+
+
+
 ## SVN配置
 
 ```shell
 # 5.jenkins如何配置SVN
 
 # 建议使用小乌龟来定位 SVN的路径
+```
+
+## 脚本demos
+
+```shell
+echo '时间戳'
+time1=$(date "+%Y%m%d%H%M%S")
+echo 'start time is '$time1
+echo "文件夹"
+deploypath="/Users/draven/Documents/documents/java/software/weblogic/Oracle_Home/user_projects/domains/base_domain/servers/AdminServer/upload/demos/app/"
+echo "文件"
+deploypathwar="/Users/draven/Documents/documents/java/software/weblogic/Oracle_Home/user_projects/domains/base_domain/servers/AdminServer/upload/demos/app/weblogic-demo.war"
+
+echo '检查文件夹是否存在'
+if [ ! -d "$deploypath"]; then
+echo 'result：文件夹不存在存在'
+mkdir "$deploypath"
+fi
+
+
+echo '检查文件是否存在'
+
+
+if [ ! -f "$deploypathwar" ]; then
+echo 'the file is not extits'
+touch "$deploypathwar"
+fi
+
+echo '开始备份文件'
+mv ${deploypath}weblogic-demo.war ${deploypath}weblogic-demo.war_bak_$time1
+sleep 2
+time2=$(date "+%Y%m%d%H%M%S")
+echo 'over time is ' $time2
+echo "文件备份结束"
 ```
 
