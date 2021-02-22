@@ -193,7 +193,9 @@ KEY: LANG; VALUE:zh.CH.UTF-8
 
 ## 脚本demos
 
+
 ```shell
+# 可在Pre Steps 此步执行 避免脚本权限问题
 echo '时间戳'
 time1=$(date "+%Y%m%d%H%M%S")
 echo 'start time is '$time1
