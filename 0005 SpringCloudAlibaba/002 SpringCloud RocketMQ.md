@@ -44,6 +44,10 @@ cd distribution/target/rocketmq-4.7.1/
 
 cd distribution/target/apache-rocketmq
 
+# 配置地址 若需要
+vim /home/prod/rocketmq-all-4.3.0/distribution/target/apache-rocketmq/conf/broker.conf
+
+
 # Start Name Server
 # sh bin/mqnamesrv
 nohup sh bin/mqnamesrv &
@@ -55,7 +59,8 @@ nohup sh bin/mqnamesrv &
 nohup sh bin/mqbroker -n localhost:9876 &
 	# tail -f ~/logs/rocketmqlogs/broker.log 
   # The broker[%s, 172.30.30.233:10911] boot success...
-
+  # 启动参数
+  nohup sh mqbroker -n 192.168.1.23:9876 -c broker.p autoCreateTopicEnable=true
 ```
 
 
