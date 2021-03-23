@@ -1,6 +1,11 @@
 # Spring Cloud Alibaba-Seata
 
+## 版本说明
 
+```shell
+# 剔除了ribbon 使用组件BanlanceLoader
+# 版本适配 2020.0.2
+```
 
 
 
