@@ -372,6 +372,13 @@ docker run -p 8848:8848 \
 -d docker.io/nacos/nacos-server:1.0.0
 ```
 
+### 2.0.0
+
+```shell
+# 2.0.0 主要是grpc偏移量端口的暴露
+docker run --env MODE=standalone --env SPRING_DATASOURCE_PLATFORM=mysql --env nacos.core.auth.enabled=true  --env MYSQL_SERVICE_HOST=192.168.169.128 --env MYSQL_SERVICE_PORT=3306 --env MYSQL_SERVICE_DB_NAME=nacos --env MYSQL_SERVICE_USER=root --env MYSQL_SERVICE_PASSWORD=123456 --env NACOS_DEBUG=n --name nacos -d -p 8849:8848 nacos/nacos-server:2.0.0
+```
+
 
 
 ## 集群
