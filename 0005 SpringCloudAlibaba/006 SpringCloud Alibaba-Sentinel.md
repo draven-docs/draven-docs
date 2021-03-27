@@ -280,6 +280,18 @@ java -Dserver.port=8080 -Dcsp.sentinel.dashboard.server=localhost:8080 -Dproject
 docker run --name sentinel-dashboard -p 8858:8080 -d sentinel-dashboard:1.8.0
 ```
 
+Dockerfile
+
+```dockerfile
+FROM openjdk:8-jdk-alpine
+VOLUME /tmp
+ADD sentinel-dashboard.jar app.jar
+
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+```
+
+
+
 # 环境示例
 
 ```java
