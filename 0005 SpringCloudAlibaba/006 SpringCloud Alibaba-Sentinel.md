@@ -2,16 +2,12 @@
 
 
 
-
-
 ```xml
 <dependency>
     <groupId>com.alibaba.cloud</groupId>
     <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
 </dependency>
 ```
-
-
 
 
 
@@ -27,19 +23,11 @@ spring:
 
 
 
-
-
-
-
-
-
 ```xml
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-openfeign</artifactId>
 </dependency>
-
-
 ```
 
 
@@ -143,10 +131,6 @@ feign:
   <artifactId>sentinel-datasource-nacos</artifactId>
 </dependency>
 ```
-
-
-
-
 
 ### 客户端
 
@@ -284,13 +268,17 @@ spring:
 # https://github.com/alibaba/Sentinel/releases
 ```
 
-
+### Linux
 
 ```shell
 java -Dserver.port=8080 -Dcsp.sentinel.dashboard.server=localhost:8080 -Dproject.name=sentinel-dashboard -jar sentinel-dashboard.jar
 ```
 
+### Docker
 
+```shell
+docker run --name sentinel-dashboard -p 8858:8080 -d sentinel-dashboard:1.8.0
+```
 
 # 环境示例
 

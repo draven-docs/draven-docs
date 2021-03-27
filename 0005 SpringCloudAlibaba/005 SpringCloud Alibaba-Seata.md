@@ -352,14 +352,27 @@ https://github.com/seata/seata/blob/1.4.0/script/client/at/db/mysql.sql
 
 # 启动镜像
 # docker run --name seata-server -e SEATA_IP=192.168.1.180 -p 8091:8091 -d  镜像ID
-
-# docker run 
+docker run --name seata-server \
+-d \
+-p 8091:8091 \
+-e SEATA_IP=10.211.55.5 \
+-e SEATA_CONFIG_NAME=file:/root/seata-config/registry \
+-v /docker/seata/seata-config/:/root/seata-config \
+seataio/seata-server:1.4.0
+# docker run \
 	#	// 容器名
-	#	--name seata-server
-	#	-e SEATA_IP=192.168.1.180
+	#	--name seata-server \
+	# 暴露服务器端口
+	#	-e SEATA_IP=192.168.1.180 \
+	# 指定使用配置文件的位置
+	# -e SEATA_CONFIG_NAME=file:/root/seata-config/registry \
+	# 配置文件挂载
+	# -v /docker/seata/seata-config/:/root/seata-config
 	#	// 宿主机与容器端口映射
-	#	-p 8091:8091 
-	#	-d 镜像ID
+	#	-p 8091:8091 \ 
+	# 启动方式
+	#	-d \ 
+	# 镜像ID
 	
 docker run --name seata-server \
         -p 8091:8091 \
