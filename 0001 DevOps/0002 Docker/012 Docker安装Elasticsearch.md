@@ -32,7 +32,7 @@ http:ip:9200/
 docker pull docker.io/elasticsearch:6.8.5
 
 # 指定内存
-docker run -e ES_JAVA_OPTS="-Xms256m -Xmx256m" -di --name=elasticsearch -p 9200:9200 -p 9300:9300 -v elasticsearch:6.8.5
+docker run -e ES_JAVA_OPTS="-Xms256m -Xmx256m" -di --name=elasticsearch -e "discovery.type=single-node" -p 9200:9200 -p 9300:9300 -v elasticsearch:6.8.5
 
 # 获取elasticsearch.yml文件
 # docker cp containername:source.yaml des.yaml
@@ -525,3 +525,4 @@ docker restart elasticsearch
 ## 参考
 
 https://www.cnblogs.com/fbtop/p/11005469.html
+
