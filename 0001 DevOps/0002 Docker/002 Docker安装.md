@@ -68,7 +68,7 @@ sudo yum list docker-ce --showduplicates | sort -r
   docker-ce.x86_64    18.06.3.ce-3.el7      docker-ce-stable 
 
 # 7. 安装指定版本docker
-yum install docker-ce-18.06.3.ce-3.el7 docker-ce-cli-18.06.3.ce-3.el7
+yum install docker-ce-3:20.10.5-3.el7 docker-ce-cli-3:20.10.5-3.el7
 
 # 8. 启动docker 开机启动
 sudo systemctl start docker
