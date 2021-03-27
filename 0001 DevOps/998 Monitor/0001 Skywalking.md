@@ -1,4 +1,4 @@
-# Skywalking
+Skywalking
 
 官网：http://skywalking.apache.org/
 
@@ -248,11 +248,100 @@ $ mvn clean install
 # install：会在本地仓库目录下创建名为 `hello-spring-cloud-external-skywalking-1.0.0-SNAPSHOT-6.0.0-Beta.tar.gz` 的压缩包
 ```
 
-# 配置结构说明
+### Agent镜像
+
+#### JDK
+
+```dockerfile
+FROM openjdk:8-jdk-alpine
+ENV LANG=C.UTF-8
+RUN  mkdir -p /usr/skywalking/agent/
+# A streamlined jre
+ADD apache-skywalking-apm-bin-es7/agent/ /usr/skywalking/agent/
+# set env
+# 此处可以设置JDK环境变量JAVA_HOMEs
+# run container with base path:/
+WORKDIR /
+CMD bash
+```
+
+#### 最小镜像
+
+```dockerfile
+# 可以从私有仓库中获取
+FROM 10.58.239.195/bn-dev/busybox:latest
+ENV LANG=C.UTF-8
+RUN set -eux && mkdir -p /usr/skywalking/agent/
+ADD ./skywalking/agent/ /usr/skywalking/agent/
+WORKDIR /
+docker build -t skywalking-agent-sidecar:8.2.0 .
+
+# dockerhub
+FROM busybox:latest
+ENV LANG=C.UTF-8
+RUN set -eux && mkdir -p /usr/skywalking/agent
+add apache-skywalking-apm-bin-es7/agent /usr/skywalking/agent
+WORKDIR /
+```
+
+# Docker部署
+
+## skywalking-oap-server
+
+```shell
+# 使用es作为数据存储
+docker run --name oap --restart always -d \
+# 由于是个人电脑 不推荐开机启动N多个容器
+--restart=always \
+-e TZ=Asia/Shanghai \
+-p 12800:12800 \
+-p 11800:11800 \
+--link es7:es7 \
+-e SW_STORAGE=elasticsearch \
+-e SW_STORAGE_ES_CLUSTER_NODES=es7:9200 \
+apache/skywalking-oap-server:8.4.0-es7
+
+# 使用mysql作为数据存储
+docker run --name oap  -d \
+-e TZ=Asia/Shanghai \
+-p 12800:12800 \
+-p 11800:11800 \
+-e SW_STORAGE=mysql \
+-e SW_JDBC_URL=jdbc:mysql://10.211.55.5:3306/swdb \
+-e SW_DATA_SOURCE_USER=root \
+-e SW_DATA_SOURCE_PASSWORD=root \
+apache/skywalking-oap-server:8.4.0-es7
+
+# 默认不包含mysql驱动，此处可以直接使用tar包构建 也可以使用高版本驱动 但是请注意jdbcUrl配置
+docker cp mysql-connector-java-5.1.49.jar oap:/skywalking/oap-libs/
+```
+
+## apache/skywalking-ui
+
+```shell
+# demo
+docker run -d --name skywalking-ui \
+--restart=always \
+-e TZ=Asia/Shanghai \
+-p 8088:8080 \
+# 链接至collector服务
+--link oap:oap \
+-e SW_OAP_ADDRESS=oap:12800 \
+apache/skywalking-ui:8.4.0
+
+
+docker run -d --name skywalking-ui \
+-e TZ=Asia/Shanghai \
+-p 8088:8080 \
+--link oap:oap \
+-e SW_OAP_ADDRESS=oap:12800 \
+apache/skywalking-ui:8.4.0
+```
+
+# 关于Agent介绍
 
 ```shell
 tar -zxvf apache-skywalking-apm-7.0.0.tar.gz -C / # 自己指定目录
-
 
 cd apache-skywalking-apm-bin/agent/
    skywalking-agent.jar # 探针jar
@@ -279,3 +368,18 @@ webapp
 	webapp.yml # UI配置
 ```
 
+# 应用测试
+
+```dockerfile
+# 使用集成了agent的jre
+FROM skywalking-jre:8.4.0
+# 讲maven生成的jar制作镜像
+COPY noxus-draven-alibaba-ilford-provider-Draven2020.0.jar  noxus-draven-alibaba-ilford-provider-Draven2020.0.jar
+# 端口暴露
+EXPOSE 10086
+# 环境配置包括增加agent与运行命令
+ENTRYPOINT java -javaagent:/usr/skywalking/agent/skywalking-agent.jar -Dskywalking.agent.service_name=alibaba-providers -Dskywalking.collector.backend_service=10.211.55.5:11800 -Dserver.port=10086 -jar noxus-draven-alibaba-ilford-provider-Draven2020.0.jar
+
+# ENTRYPOINT ["java","-jar","app.jar"]
+# ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-javaagent:/tmp/agent/skywalking-agent.jar","-jar","app.jar"]
+```
