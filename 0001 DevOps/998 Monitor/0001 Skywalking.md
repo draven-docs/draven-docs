@@ -383,3 +383,201 @@ ENTRYPOINT java -javaagent:/usr/skywalking/agent/skywalking-agent.jar -Dskywalki
 # ENTRYPOINT ["java","-jar","app.jar"]
 # ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-javaagent:/tmp/agent/skywalking-agent.jar","-jar","app.jar"]
 ```
+
+# 日志功能
+
+## 资料
+
+```shell
+# https://skywalking.apache.org/docs/main/v8.4.0/en/setup/service-agent/java-agent/application-toolkit-logback-1.x/
+
+# https://skywalking.apache.org/docs/main/v8.4.0/en/setup/service-agent/java-agent/application-toolkit-log4j-1.x/
+
+# https://skywalking.apache.org/docs/main/v8.4.0/en/setup/service-agent/java-agent/readme/#table-of-agent-configuration-properties
+```
+
+## 依赖
+
+```shell
+<dependency>
+  <groupId>org.apache.skywalking</groupId>
+  <artifactId>apm-toolkit-logback-1.x</artifactId>
+  <version>{project.release.version}</version>
+</dependency>
+```
+
+agent config
+
+```conf
+plugin.toolkit.log.grpc.reporter.server_host=${SW_GRPC_LOG_SERVER_HOST:127.0.0.1}
+plugin.toolkit.log.grpc.reporter.server_port=${SW_GRPC_LOG_SERVER_PORT:11800}
+plugin.toolkit.log.grpc.reporter.max_message_size=${SW_GRPC_LOG_MAX_MESSAGE_SIZE:10485760}
+plugin.toolkit.log.grpc.reporter.upstream_timeout=${SW_GRPC_LOG_GRPC_UPSTREAM_TIMEOUT:30}
+
+plugin.toolkit.log.transmit_formatted=false
+```
+
+```xml
+<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+  <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+    <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.TraceIdPatternLogbackLayout">
+      <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%tid] [%thread] %-5level %logger{36} -%msg%n</Pattern>
+    </layout>
+  </encoder>
+</appender>
+
+<appender name="grpc-log" class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.log.GRPCLogClientAppender"/>
+```
+
+
+
+# 附录
+
+## logback
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <pattern>%date [%thread] %-5level [%logger{50}] %file:%line - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.TraceIdPatternLogbackLayout">
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%tid] [%thread] %-5level %logger{36} -%msg%n</Pattern>
+            </layout>
+        </encoder>
+    </appender>
+
+    <appender name="grpc-log" class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.log.GRPCLogClientAppender"/>
+
+
+    <appender name="FILE_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--如果只是想要 Info 级别的日志，只是过滤 info 还是会输出 Error 日志，因为 Error 的级别高， 所以我们使用下面的策略，可以避免输出 Error 的日志-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <!--过滤 Error-->
+            <level>ERROR</level>
+            <!--匹配到就禁止-->
+            <onMatch>DENY</onMatch>
+            <!--没有匹配到就允许-->
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <!--日志名称，如果没有File 属性，那么只会使用FileNamePattern的文件路径规则如果同时有<File>和<FileNamePattern>，那么当天日志是<File>，明天会自动把今天的日志改名为今天的日期。即，<File> 的日志都是当天的。-->
+        <!--<File>logs/info.spring-boot-demo-logback.log</File>-->
+        <!--滚动策略，按照时间滚动 TimeBasedRollingPolicy-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--文件路径,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间-->
+            <FileNamePattern>logs/spring-boot-demo-logback/info.created_on_%d{yyyy-MM-dd}.part_%i.log</FileNamePattern>
+            <!--只保留最近90天的日志-->
+            <maxHistory>90</maxHistory>
+            <!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志-->
+            <!--<totalSizeCap>1GB</totalSizeCap>-->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- maxFileSize:这是活动文件的大小，默认值是10MB,本篇设置为1KB，只是为了演示 -->
+                <maxFileSize>2MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <!--<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">-->
+        <!--<maxFileSize>1KB</maxFileSize>-->
+        <!--</triggeringPolicy>-->
+        <encoder>
+            <pattern>%date [%thread] %-5level [%logger{50}] %file:%line - %msg%n</pattern>
+            <charset>UTF-8</charset> <!-- 此处设置字符集 -->
+        </encoder>
+    </appender>
+
+    <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--如果只是想要 Error 级别的日志，那么需要过滤一下，默认是 info 级别的，ThresholdFilter-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>Error</level>
+        </filter>
+        <!--日志名称，如果没有File 属性，那么只会使用FileNamePattern的文件路径规则如果同时有<File>和<FileNamePattern>，那么当天日志是<File>，明天会自动把今天的日志改名为今天的日期。即，<File> 的日志都是当天的。-->
+        <!--<File>logs/error.spring-boot-demo-logback.log</File>-->
+        <!--滚动策略，按照时间滚动 TimeBasedRollingPolicy-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--文件路径,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间-->
+            <FileNamePattern>logs/spring-boot-demo-logback/error.created_on_%d{yyyy-MM-dd}.part_%i.log</FileNamePattern>
+            <!--只保留最近90天的日志-->
+            <maxHistory>90</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- maxFileSize:这是活动文件的大小，默认值是10MB,本篇设置为1KB，只是为了演示 -->
+                <maxFileSize>2MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date [%thread] %-5level [%logger{50}] %file:%line - %msg%n</pattern>
+            <charset>UTF-8</charset> <!-- 此处设置字符集 -->
+        </encoder>
+    </appender>
+
+
+
+
+    <!--    <appender name="prodEMAIL" class="ch.qos.logback.classic.net.SMTPAppender">
+            <smtpHost>smtp.163.com</smtpHost>
+            <smtpPort>25</smtpPort>
+            <to>18335927508@163.com</to>
+            <from>18335927508@163.com</from>
+            <subject>[ORDER-UAT]ERROR: %logger{20} - %m</subject>
+            <username>18335927508@163.com</username>
+            <password>xxxx</password>
+            <SSL>false</SSL>
+            <charsetEncoding>utf-8</charsetEncoding>
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%date %-5level %logger{35} - %message%n</pattern>
+            </layout>
+            &lt;!&ndash; 这里采用等级过滤器 指定等级相符才发送 &ndash;&gt;
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>ERROR</level>
+                <onMatch>ACCEPT</onMatch>
+                <onMismatch>DENY</onMismatch>
+            </filter>
+        </appender>-->
+
+
+    <!--    <appender name="prodEMAIL" class="ch.qos.logback.classic.net.SMTPAppender">-->
+    <!--        <smtpHost>smtp.email.qq.com</smtpHost>-->
+    <!--        <smtpPort>465</smtpPort>-->
+    <!--        <to>18335927508@163.com</to>-->
+    <!--        <from>1064517852@qq.com</from>-->
+    <!--        <subject>[ORDER-UAT]ERROR: %logger{20} - %m</subject>-->
+    <!--        <username>1064517852@qq.com</username>-->
+    <!--        <password>xxxx</password>-->
+    <!--        <SSL>true</SSL>-->
+    <!--        <charsetEncoding>utf-8</charsetEncoding>-->
+    <!--        <layout class="ch.qos.logback.classic.PatternLayout">-->
+    <!--            <pattern>%date %-5level %logger{35} - %message%n</pattern>-->
+    <!--        </layout>-->
+    <!--        &lt;!&ndash; 这里采用等级过滤器 指定等级相符才发送 &ndash;&gt;-->
+    <!--        <filter class="ch.qos.logback.classic.filter.LevelFilter">-->
+    <!--            <level>ERROR</level>-->
+    <!--            <onMatch>ACCEPT</onMatch>-->
+    <!--            <onMismatch>DENY</onMismatch>-->
+    <!--        </filter>-->
+    <!--    </appender>-->
+
+
+
+    <root level="info">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE_INFO"/>
+        <appender-ref ref="FILE_ERROR"/>
+        <!--        <appender-ref ref="prodEMAIL"/>-->
+        <appender-ref ref="grpc-log" />
+    </root>
+
+<!--    <root level="info">
+        <appender-ref ref="grpc-log" />
+    </root>-->
+</configuration>
+
+```
+
