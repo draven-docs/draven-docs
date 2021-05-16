@@ -2,6 +2,18 @@
 
 简单入门
 
+```shell
+# 由于新版本没有提供设置默认sc的方式
+# https://kubernetes.io/zh/docs/tasks/administer-cluster/change-default-storage-class/
+
+# kubernetes和docker版本兼容性问题
+# vim 编辑 /var/lib/kubelet/kubeadm-flags.env文件
+添加
+--runtime-cgroups=/systemd/system.slice --kubelet-cgroups=/systemd/system.slice
+```
+
+
+
 # Release Notes For 2.1.1
 
 https://v2-1.docs.kubesphere.io/docs/zh-CN/release/release-v211/
