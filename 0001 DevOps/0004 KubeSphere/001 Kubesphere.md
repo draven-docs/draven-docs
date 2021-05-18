@@ -710,3 +710,16 @@ spec:
 
 ```
 
+
+
+# FQA
+
+```shell
+# 卸载kubesphere 重新安装 kubesphere 之后可能会报错
+sidecar-injector.istio.io": Post "https://istiod-1-6-10.istio-system.svc:443/inject?timeout=30s": service "istiod-1-6-10" not found
+# 解决方案
+kubectl label namespace kubesphere-system istio-injection=disabled
+
+# 再次进行安装
+```
+
