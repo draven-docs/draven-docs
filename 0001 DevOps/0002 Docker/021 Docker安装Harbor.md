@@ -9,6 +9,7 @@ docker docker-compose 简单的docker操作指令
 ```shell
 # 获取安装文件
 wget https://github.com/goharbor/harbor/releases/download/v1.10.0/harbor-offline-installer-v1.10.0.tgz
+wget https://github.com/goharbor/harbor/releases/download/v2.2.2/harbor-offline-installer-v2.2.2.tgz
 ```
 
 ```shell
