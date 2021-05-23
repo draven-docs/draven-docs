@@ -2252,19 +2252,80 @@ Environment
 
 
 
+# SpringBoot2.5
+
+## Environment Variable Prefixes
+
+```java
+SpringApplication application = new SpringApplication(MyApp.class);
+application.setEnvironmentPrefix("myapp");
+application.run(args);
+```
 
 
 
+```yaml
+# 但是不生效 issuse
+myapp:
+	server:
+		port: 8000
+```
 
 
 
+## HTTP/2 over TCP
+
+```
+# https://www.jianshu.com/p/7ddcdd3847d6?from=groupmessage
+
+# https://github.com/spring-projects/spring-boot/tree/main/spring-boot-tests/spring-boot-smoke-tests/spring-boot-smoke-test-tomcat-multi-connectors
+
+# https://github.com/spring-projects/spring-boot/blob/v2.1.9.RELEASE/spring-boot-samples/spring-boot-sample-tomcat-multi-connectors/src/main/java/sample/tomcat/multiconnector/SampleTomcatTwoConnectorsApplication.java
+```
 
 
 
+```java
+@SpringBootApplication
+public class Http2Application {
+
+    public static void main(String[] args) {
+        SpringApplication application = new SpringApplication(Http2Application.class);
+        application.setEnvironmentPrefix("myapp");
+        application.run(args);
+    }
+
+    @Bean
+    public ServletWebServerFactory servletContainer() {
+        TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
+        tomcat.addAdditionalTomcatConnectors(createStandardConnector());
+        return tomcat;
+    }
+
+    //org.apache.coyote.http11.Http11Nio2Protocol
+    // org.apache.coyote.http11.Http11NioProtocol
+    private Connector createStandardConnector() {
+        Connector connector = new Connector("org.apache.coyote.http11.Http11Nio2Protocol");
+        connector.setPort(9000);
+        return connector;
+    }
+
+}
+```
 
 
 
+```properties
+myapp.server.port=8000
+server.http2.enabled=true
+server.compression.enabled=true
+server.port=8443
+server.ssl.key-store=classpath:sample.jks
+server.ssl.key-store-password=secret
+server.ssl.key-password=password
+```
 
+### 说明
 
 # 未整合资源（暂时不需要）
 
