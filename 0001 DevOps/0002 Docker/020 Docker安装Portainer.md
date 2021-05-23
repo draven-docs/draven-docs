@@ -13,7 +13,7 @@ docker volume /docker/portainer/data
 ## 获取镜像
 
 ```shell
-docker pull portainer/portainer:1.23.0
+docker pull portainer/portainer:1.24.0
 ```
 
 ## 创建容器
@@ -24,7 +24,7 @@ docker run -d \
 --name portainer \
 -v /var/run/docker.sock:/var/run/docker.sock \
 -v /docker/portainer/data:/data \
-portainer/portainer:1.23.0
+portainer/portainer:1.24.0
 ```
 
 访问页面
