@@ -13,13 +13,15 @@ $ docker search oralce
 ### 拉取镜像
 
 ```bash
-$ docke pull alexeiled/docker-oracle-xe-11g
+$ docker pull alexeiled/docker-oracle-xe-11g
+docker pull deepdiver/docker-oracle-xe-11g:2.0
 ```
 
 ### 启动镜像
 
 ```bash
 $ docker run -d -p 49161:1521 -e ORACLE_ALLOW_REMOTE=true  alexeiled/docker-oracle-xe-11g
+docker run -d -p 49161:1521 -e ORACLE_ALLOW_REMOTE=true  deepdiver/docker-oracle-xe-11g:2.0
 ```
 
 上面命令中 `-e ORACLE_ALLOW_REMOTE=true` 的作用是开启远程连接，如果只是本地使用可以写成这样
@@ -30,6 +32,7 @@ $ docker run -d -p 49161:1521 alexeiled/docker-oracle-xe-11g
 
 ```
 docker run -d -v /data/kongchao/docker_volume/oracle_data:/data/oracle_data -p 49160:22 -p 49161:1521 -e ORACLE_ALLOW_REMOTE=true alexeiled/oracle-xe-11g
+docker run -d --name=oracle -v /docker/oracle/oracle_data:/data/oracle_data -p 49160:22 -p 49161:1521 -e ORACLE_ALLOW_REMOTE=true deepdiver/docker-oracle-xe-11g:2.0
 ```
 
 ### 远程链接镜像
@@ -49,3 +52,15 @@ docker run -d -v /data/kongchao/docker_volume/oracle_data:/data/oracle_data -p 4
 # 连接工具
 
 https://www.oracle.com/technetwork/developer-tools/sql-developer/downloads/index.htmlcccvc
+
+https://www.oracle.com/cn/database/technologies/appdev/sqldeveloper-landing.html
+
+```shell
+#Mac Navicat 报错：ORA-24454 
+
+#查看hostname，终端执行：hostname；
+#设置hosts文件，终端执行：sudo /bin/bash -c "echo '127.0.1.1 [上一步查出来的hostname]' >> /etc/hosts"；
+#再尝试使用Navicat连接Oracle，可以正常连接。
+
+```
+
