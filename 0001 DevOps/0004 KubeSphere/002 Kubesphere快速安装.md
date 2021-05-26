@@ -124,7 +124,7 @@ EOF
 
 yum install -y kubelet-1.20.0 kubeadm-1.20.0 kubectl-1.20.0
 
-ystemctl enable kubelet && systemctl start kubelet
+systemctl enable kubelet && systemctl start kubelet
 ```
 
 
