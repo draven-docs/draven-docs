@@ -1,4 +1,6 @@
-Skywalking
+# Skywalking
+
+Dapper
 
 官网：http://skywalking.apache.org/
 
@@ -383,6 +385,27 @@ ENTRYPOINT java -javaagent:/usr/skywalking/agent/skywalking-agent.jar -Dskywalki
 # ENTRYPOINT ["java","-jar","app.jar"]
 # ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-javaagent:/tmp/agent/skywalking-agent.jar","-jar","app.jar"]
 ```
+
+# 告警功能
+
+
+
+# 追踪功能
+
+```xml
+<dependency>
+  <groupId>org.apache.skywalking</groupId>
+  <artifactId>apm-toolkit-trace</artifactId>
+  <version>{project.release.version}</version>
+</dependency>
+```
+
+```java
+@Trace
+@Tag
+```
+
+
 
 # 日志功能
 
