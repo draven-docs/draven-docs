@@ -68,6 +68,10 @@ as root:
 
 kubeadm join 192.168.160.103:6443 --token o4bjbs.7du65ipd36iirlwg \
     --discovery-token-ca-cert-hash sha256:979848d170a59d658fab94d67a022c3321e25c480315b1fff84b029fe0ada784
+    
+# 查询token信息    
+kubeadm token list
+
 # end
 
 # 配置网络插件
