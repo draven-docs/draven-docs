@@ -1,22 +1,38 @@
 # Skywalking
 
-Dapper
+## 资料信息
 
-官网：http://skywalking.apache.org/
+```html
+1.官网：
+http://skywalking.apache.org/
 
-参考资料：
+2.参考资料：
 
-镜像资料：
-
+2.1 镜像资料：
 https://hub.docker.com/r/apache/skywalking-oap-server
 
-下载链接：
-
+3.下载链接：
 https://skywalking.apache.org/downloads/
 
-Demo:
-
+4.Demo:
 https://www.apache.org/dyn/closer.cgi/skywalking/8.0.0/apache-skywalking-apm-8.0.0.tar.gz
+
+5.其他资料：
+https://skywalking.apache.org/docs/skywalking-showcase/latest/readme/
+```
+
+# Update
+
+
+
+```shell
+# 更新至最新版
+# https://www.apache.org/dyn/closer.cgi/skywalking/8.9.1/apache-skywalking-apm-8.9.1.tar.gz
+```
+
+
+
+
 
 ## 什么是链路追踪
 
@@ -29,6 +45,8 @@ https://www.apache.org/dyn/closer.cgi/skywalking/8.0.0/apache-skywalking-apm-8.0
 ![Skywalking-01](./images/skywalking-old.png)
 
 ![Skywalking-01](./images/skywalking-new.png)
+
+![Skywalking-01](./images/skywalking-8.9.1.png)
 
 - **Skywalking Agent：** 使用 JavaAgent 做字节码植入，无侵入式的收集，并通过 HTTP 或者 gRPC 方式发送数据到 SkyWalking Collector。
 
@@ -339,6 +357,129 @@ docker run -d --name skywalking-ui \
 -e SW_OAP_ADDRESS=oap:12800 \
 apache/skywalking-ui:8.4.0
 ```
+
+
+
+# Linux部署
+
+## 单机部署
+
+```shell
+# 下载安装包
+$ wget https://www.apache.org/dyn/closer.cgi/skywalking/8.9.1/apache-skywalking-apm-8.9.1.tar.gz
+
+# 解压安装包
+tar -zxvf https://www.apache.org/dyn/closer.cgi/skywalking/8.9.1/apache-skywalking-apm-8.9.1.tar.gz
+
+# 更改名称
+$ mv apache-skywalking-apm-bin apache-skywalking
+
+# 编辑配置文件
+$ vim apache-skywalking/conf/application.yml
+
+# 修改UI界面端口
+$ vim apache-skywalking/webapp/webapp.yml
+
+# 分别启动 oap-server 以及 webapp
+$ ./apache-skywalking/startup.sh
+$ ./apache-skywalking/bin/oapService.sh
+$ ./apache-skywalking/bin/webappService.sh
+
+```
+
+## 集群部署
+
+```shell
+# 获取文件
+# 见《单机部署》
+
+
+$ mv apache-skywalking-apm-bin skywalkingNode1
+$ mv apache-skywalking-apm-bin skywalkingNode2
+$ mv apache-skywalking-apm-bin skywalkingNode3
+
+$ vim apache-skywalking/webapp/webapp.yml
+# 《见 下webapp.yml》
+
+# agent配置
+SW_AGENT_COLLECTOR_BACKEND_SERVICES=ip1:port1,ip2:port2,ip3:port3
+
+# 启动 可nginx代理
+./skywalkingNode1/startup.sh
+./skywalkingNode2/startup.sh
+./skywalkingNode3/startup.sh
+
+```
+
+### Nacos
+
+```yaml
+# 资料
+# https://skywalking.apache.org/docs/main/v8.9.1/en/setup/backend/dynamic-config/
+
+# vim apache-skywalking/conf/application.yml
+
+# 注册
+cluster:
+  selector: ${SW_CLUSTER:nacos}
+  nacos:
+    serviceName: ${SW_SERVICE_NAME:"SkyWalking_OAP_Cluster"}
+    hostPort: ${SW_CLUSTER_NACOS_HOST_PORT:localhost:8848}
+    # Nacos Configuration namespace
+    namespace: ${SW_CLUSTER_NACOS_NAMESPACE:"public"}
+    # Nacos auth username
+    username: ${SW_CLUSTER_NACOS_USERNAME:""}
+    password: ${SW_CLUSTER_NACOS_PASSWORD:""}
+    # Nacos auth accessKey
+    accessKey: ${SW_CLUSTER_NACOS_ACCESSKEY:""}
+    secretKey: ${SW_CLUSTER_NACOS_SECRETKEY:""}
+    
+# 配置
+configuration:
+  selector: ${SW_CONFIGURATION:nacos}
+  nacos:
+  # Nacos Server Host
+  serverAddr: ${SW_CONFIG_NACOS_SERVER_ADDR:127.0.0.1}
+  # Nacos Server Port
+  port: ${SW_CONFIG_NACOS_SERVER_PORT:8848}
+  # Nacos Configuration Group
+  group: ${SW_CONFIG_NACOS_SERVER_GROUP:skywalking}
+  # Nacos Configuration namespace
+  namespace: ${SW_CONFIG_NACOS_SERVER_NAMESPACE:}
+  # Unit seconds, sync period. Default fetch every 60 seconds.
+  period: ${SW_CONFIG_NACOS_PERIOD:60}
+  # Nacos auth username
+  username: ${SW_CONFIG_NACOS_USERNAME:""}
+  password: ${SW_CONFIG_NACOS_PASSWORD:""}
+  # Nacos auth accessKey
+  accessKey: ${SW_CONFIG_NACOS_ACCESSKEY:""}
+  secretKey: ${SW_CONFIG_NACOS_SECRETKEY:""}
+
+
+```
+
+### webapp.yml
+
+```yaml
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: oap-route
+          uri: lb://oap-service
+          predicates:
+            - Path=/graphql/**
+    discovery:
+      client:
+        simple:
+          instances:
+            oap-service:
+              - uri: http://127.0.0.1:12801
+              - uri: http://127.0.0.1:12802
+              - uri: http://127.0.0.1:12803
+```
+
+
 
 # 关于Agent介绍
 
