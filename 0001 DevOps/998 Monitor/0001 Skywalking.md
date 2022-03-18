@@ -2,22 +2,23 @@
 
 ## 资料信息
 
-```html
-1.官网：
+```shell
+# Agent 与 Server是不同的
+# 1.官网：
 http://skywalking.apache.org/
 
-2.参考资料：
+# 2.参考资料：
 
-2.1 镜像资料：
+# 2.1 镜像资料：
 https://hub.docker.com/r/apache/skywalking-oap-server
 
-3.下载链接：
+# 3.下载链接：
 https://skywalking.apache.org/downloads/
 
-4.Demo:
+# 4.Demo:
 https://www.apache.org/dyn/closer.cgi/skywalking/8.0.0/apache-skywalking-apm-8.0.0.tar.gz
 
-5.其他资料：
+# 5.其他资料：
 https://skywalking.apache.org/docs/skywalking-showcase/latest/readme/
 ```
 
@@ -458,6 +459,19 @@ configuration:
 
 ```
 
+| Config Key                                          | Value Description                                            | Value Format Example                                         |
+| --------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| agent-analyzer.default.slowDBAccessThreshold        | Thresholds of slow Database statement. Overrides `receiver-trace/default/slowDBAccessThreshold`of `application.yml`. | default:200,mongodb:50                                       |
+| agent-analyzer.default.uninstrumentedGateways       | The uninstrumented gateways. Overrides `gateways.yml`.       | Same as [`gateways.yml`](https://skywalking.apache.org/docs/main/v8.9.1/en/setup/backend/uninstrumented-gateways#configuration-format). |
+| alarm.default.alarm-settings                        | The alarm settings. Overrides `alarm-settings.yml`.          | Same as [`alarm-settings.yml`](https://skywalking.apache.org/docs/main/v8.9.1/en/setup/backend/backend-alarm). |
+| core.default.apdexThreshold                         | The apdex threshold settings. Overrides `service-apdex-threshold.yml`. | Same as [`service-apdex-threshold.yml`](https://skywalking.apache.org/docs/main/v8.9.1/en/setup/backend/apdex-threshold). |
+| core.default.endpoint-name-grouping                 | The endpoint name grouping setting. Overrides `endpoint-name-grouping.yml`. | Same as [`endpoint-name-grouping.yml`](https://skywalking.apache.org/docs/main/v8.9.1/en/setup/backend/endpoint-grouping-rules). |
+| core.default.log4j-xml                              | The log4j xml configuration. Overrides `log4j2.xml`.         | Same as [`log4j2.xml`](https://skywalking.apache.org/docs/main/v8.9.1/en/setup/backend/dynamical-logging). |
+| agent-analyzer.default.traceSamplingPolicy          | The sampling policy for default and service dimension, override `trace-sampling-policy-settings.yml`. | same as [`trace-sampling-policy-settings.yml`](https://skywalking.apache.org/docs/main/v8.9.1/en/setup/backend/trace-sampling) |
+| configuration-discovery.default.agentConfigurations | The ConfigurationDiscovery settings.                         | See [`configuration-discovery.md`](https://github.com/apache/skywalking-java/blob/20fb8c81b3da76ba6628d34c12d23d3d45c973ef/docs/en/setup/service-agent/java-agent/configuration-discovery.md). |
+
+
+
 ### webapp.yml
 
 ```yaml
@@ -742,6 +756,10 @@ plugin.toolkit.log.transmit_formatted=false
         <appender-ref ref="grpc-log" />
     </root>-->
 </configuration>
+
+```
+
+```java
 
 ```
 
