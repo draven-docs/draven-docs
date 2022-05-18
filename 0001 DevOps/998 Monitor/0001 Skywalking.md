@@ -576,7 +576,7 @@ ENTRYPOINT java -javaagent:/usr/skywalking/agent/skywalking-agent.jar -Dskywalki
 
 ## 依赖
 
-```shell
+```xml-dtd
 <dependency>
   <groupId>org.apache.skywalking</groupId>
   <artifactId>apm-toolkit-logback-1.x</artifactId>
@@ -586,7 +586,7 @@ ENTRYPOINT java -javaagent:/usr/skywalking/agent/skywalking-agent.jar -Dskywalki
 
 agent config
 
-```conf
+```properties
 plugin.toolkit.log.grpc.reporter.server_host=${SW_GRPC_LOG_SERVER_HOST:127.0.0.1}
 plugin.toolkit.log.grpc.reporter.server_port=${SW_GRPC_LOG_SERVER_PORT:11800}
 plugin.toolkit.log.grpc.reporter.max_message_size=${SW_GRPC_LOG_MAX_MESSAGE_SIZE:10485760}
